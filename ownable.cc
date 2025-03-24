@@ -3,6 +3,7 @@
 
 export module ownable;
 import Building;
+import Player;
 import <string>;
 
 using namespace std;

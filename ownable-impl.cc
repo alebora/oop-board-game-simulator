@@ -1,2 +1,3 @@
 /*Implementation File for ownable properties*/
-import ownable;
+module ownable;
+import Player;
