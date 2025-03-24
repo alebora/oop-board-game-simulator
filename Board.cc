@@ -16,7 +16,7 @@ export class Board: public Subject {
         vector<Player*> vec_players_selected;
         vector<Building*> vec_buildings;
         //Player* getPlayer(int n); //DEL LATER
-        Player* getPlayer(string s); //DEL LATER
+        Player* getPlayer(string s); //DID NOT ADD TO UML BUT IS IMPLEMENTED 
         void printBoard();
         void stateOfBoardChange();
         int getNumPlayers();

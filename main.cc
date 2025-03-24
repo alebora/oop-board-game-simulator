@@ -11,6 +11,21 @@ using namespace std;
 
 bool fair_dice = true; 
 
+void setBuildings(Board *B){
+    fstream f("buildings.txt"); //all 40 
+    if (!f.is_open()){
+        cout << "invalid file name." << endl; 
+    } else {
+        int posNum = 0; 
+        string buildingName;
+        while (getline(f, buildingName)){
+            //B->addBuilding(buildingName, "BANK", 0, posNum);
+            ++posNum;
+        }
+    }
+    f.close();   
+}
+
 int DiceRoll(){
     srand(time(0));
     int dice1 = rand() % 6 + 1;
@@ -39,7 +54,7 @@ void selectPlayers(int numPlayers, Board *b){
 
 // bool loadGame(char* filename, Board *B){ //need to have info on ownable buildings to implement
 //     ifstream f;
-//     if (!f.open(filename)){
+//     if (!f.is_open(filename)){ //dont forget to close file
 //         return false;
 //     } else {
 //         istringstream iss;
@@ -81,6 +96,7 @@ void selectPlayers(int numPlayers, Board *b){
 
 int main(int argc, char* argv[]){
     Board boardMain; 
+    //setBuildings(&boardMain);
     // Display_Events DE; //observer //need display_events to implement 
     // boardMain.attach(&DE);
     if (argc > 1) {
@@ -169,8 +185,8 @@ int main(int argc, char* argv[]){
                 //Player *currentPlayerPtr = boardMain.vec_players_selected[boardMain.getCurrPlayer()];  
                 // if (boardMain.vec_buildings[pos]->getOwnableStatus()){ //means is an owneable building 
                 //     //check owenrship 
-                //     if (boardMain.vec_buildings[pos]->owner){ //owner by this player 
-                //         if(boardMain.vec_buildings[pos]->owner->getName() == boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName()){
+                //     if (boardMain.vec_buildings[pos]->getOwner()){ //is ownable 
+                //         if(boardMain.vec_buildings[pos]->getOwner()->getName() == boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName()){ //owner by this player 
                 //             cout << "You own this property, nice!" << endl;
                 //         } else { //owned by other player
                 //             cout << "This buliding is owned, please pay [...] [$...]. "; 

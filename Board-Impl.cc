@@ -20,18 +20,21 @@ Player* Board::getPlayer(string s){
 }
 
 // void Board::addBuilding(string Bname, string owner, int improvements, int pos){ // !! Need to see how ctor is implemented for academic, gym, and res
-//     // !! Building ctor !! ?? can be any of 4 types: 
-//     if(...){ //ownable
-//         Player *Theowner = getplayer(owner);
-//         Academic *b(Bname, pos, Theowner, improvements);
-//     }else if (...){
-//         Player *Theowner = getplayer(owner);
-//         Gym *b(Bname, pos, Theowner);
-//     } else if (...){
-//         Player *Theowner = getplayer(owner);
-//         Res *b(Bname, pos, Theowner);
+//     // !! Building ctor !! ?? can be any of 4 types:
+//     Player *p;
+//     if (Bname != "BANK") {
+//         p = getPlayer(Bname);
 //     } else {
+//         p = nullptr;
+//     }
+//     if (pos == 12 || pos == 28){ //gym
+//         Gym *b(Bname, pos, p); // NEED GYM CTOR
+//     }else if (pos == 5 || pos == 15 || pos == 25 || pos == 35){ //res
+//         Res *b(Bname, pos, p); // NEED RES CTOR
+//     } else if (pos == 0 || pos == 2 || pos == 4 || pos == 7 || pos == 10 || pos == 17 || pos == 20 || pos == 22 || pos == 30 || pos == 33 || pos == 36 || pos == 38){ //unownable
 //         Unownable *b(Bname, pos);
+//     } else { //academic
+//         Academic *b(Bname, pos, p); // NEED ACADEMIC CTOR
 //     }
 //     vec_buildings.emplace_back(b);
 // }
