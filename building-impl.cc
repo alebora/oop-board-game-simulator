@@ -3,12 +3,17 @@ import <string>;
 
 using namespace std;
 
-Building::Building(string BName, size_t blockPosition): BName{BName}, blockPosition{blockPosition} {}
+Building::Building(string name, size_t blockPosition, bool isOwnable): name{name}, blockPosition{blockPosition}, isOwnable{isOwnable} {}
 
 string Building::getBName() const {
-    return BName;
+    return name;
 }
 
 size_t Building::getBPos() const {
     return blockPosition;
 }
+
+bool Building::getOwnableStatus() const {
+    return isOwnable;
+}
+

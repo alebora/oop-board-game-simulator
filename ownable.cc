@@ -10,17 +10,24 @@ using namespace std;
 
 export class Ownable: public Building {
 
+    Player *owner;
     int propertyCost;
     bool isMortgaged;
 
     public:
-        Player *owner; //pointer to the owner, with nullptr denoting no ownership status
+         //pointer to the owner, with nullptr denoting no ownership status
         
         //add ctor
+        Ownable( string name, size_t blockPosition, bool isOwnable, int propertyCost );
+        virtual ~Ownable() = 0; //to make it an ABC
 
-        string getPropName();
         int getCost() const;
-        Player getOwner() const;
+        Player* getOwner() const;
+        void setOwner( Player *player );
+        void removeOwner();
         bool getMortgageState() const;
-        char getBType() const;
+        void setMortgageState( bool mortgage );
+        
+        virtual char getBType() const = 0; //DOUBLE CHECK
+        
 };

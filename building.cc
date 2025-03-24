@@ -5,12 +5,14 @@ using namespace std;
 
 
 export class Building {
-    string BName;
+    string name;
     size_t blockPosition;
+    bool isOwnable;
 
     public:
-        Building(string BName, size_t blockPosition); //ctor
+        Building(string name, size_t blockPosition, bool isOwnable); //ctor
         string getBName() const;
         size_t getBPos() const;
+        bool getOwnableStatus() const;
         virtual ~Building() = 0; //so it is an ABC
 };
