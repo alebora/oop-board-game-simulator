@@ -1,15 +1,16 @@
 module gym;
 import ownable;
 import Building;
+import Player;
 import <string>;
 
 using namespace std;
 
-Gym::Gym(string name, size_t blockPosition): Ownable{name, blockPosition, true, 150} {}
+Gym::Gym(string name, size_t blockPosition, Player *owner): Ownable{name, blockPosition, true, owner, 150} {}
 
 
-//diceSum -> is the sum of the two dice rolled
-//numGymOwner -> is the number of gym owners (maximum 2)
+/* diceSum -> is the sum of the two dice rolled */
+/* numGymOwner -> is the number of gym owners (maximum 2) */
 int Gym::usageFee(int diceSum, int numGymOwner) {
     //One can only claim rent if there exists and owner, so we do not consider the case of 0 gym owners here
     int fee = 0;
@@ -21,5 +22,5 @@ int Gym::usageFee(int diceSum, int numGymOwner) {
     return fee;
 }
 
-//getBType -> returns the type of building from either {A, R, G}
+/* getBType -> returns the type of building from either {A, R, G} */
 char Gym::getBType() const { return 'G'; }
