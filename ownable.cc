@@ -15,7 +15,7 @@ export class Ownable: public Building {
     bool isMortgaged;
 
     public:        
-        Ownable( string name, size_t blockPosition, bool isOwnable, int propertyCost );
+        Ownable( string name, size_t blockPosition, bool isOwnable, Player *owner, int propertyCost );
         virtual ~Ownable() = 0; //to make it an ABC
 
         int getCost() const; //SHOULD BE PURE VIRTUAL?

@@ -5,7 +5,8 @@ import Building;
 
 using namespace std;
 
-Ownable::Ownable(string name, size_t blockPosition, bool isOwnable, int propertyCost): Building{name, blockPosition, isOwnable}, owner{nullptr}, propertyCost{propertyCost}, isMortgaged{false} {}
+Ownable::Ownable(string name, size_t blockPosition, bool isOwnable, Player *owner, int propertyCost): Building{name, blockPosition, isOwnable}, owner{owner}, propertyCost{propertyCost}, isMortgaged{false} {}
+
 Player* Ownable::getOwner() const {
     return owner;
 }
