@@ -1,4 +1,5 @@
-module building;
+module Building;
+import <string>;
 
 using namespace std;
 

@@ -1,5 +1,6 @@
+export module Building;
 import <string>;
-export module building;
+
 using namespace std;
 
 
@@ -9,7 +10,7 @@ export class Building {
 
     public:
         Building(string BName, size_t blockPosition); //ctor
-        string getBName();
-        size_t getBPos();
+        string getBName() const;
+        size_t getBPos() const;
         virtual ~Building() = 0; //so it is an ABC
 };
