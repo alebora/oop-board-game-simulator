@@ -34,3 +34,6 @@ char Ownable::getBType() const {
 
 } //should this be pure virtual or something bc building cost depends on which building it is
 */
+
+Ownable::~Ownable() {}
+

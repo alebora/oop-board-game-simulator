@@ -17,3 +17,5 @@ bool Building::getOwnableStatus() const {
     return isOwnable;
 }
 
+Building::~Building() {}
+

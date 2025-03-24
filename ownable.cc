@@ -14,14 +14,11 @@ export class Ownable: public Building {
     int propertyCost;
     bool isMortgaged;
 
-    public:
-         //pointer to the owner, with nullptr denoting no ownership status
-        
-        //add ctor
+    public:        
         Ownable( string name, size_t blockPosition, bool isOwnable, int propertyCost );
         virtual ~Ownable() = 0; //to make it an ABC
 
-        int getCost() const;
+        int getCost() const; //SHOULD BE PURE VIRTUAL?
         Player* getOwner() const;
         void setOwner( Player *player );
         void removeOwner();
