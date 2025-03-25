@@ -1,1 +1,2 @@
-123456789
+libraries:
+iostream vector cstdint cstddef cassert memory sstream fstream iomanip algorithm ctime string

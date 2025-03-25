@@ -10,6 +10,25 @@ Player::Player(string name, char acronym, int cups, int money, int pos, int jail
     position(pos), name(name), money(money), acronym(acronym), inJail(jail), jailTurns(turns), isBankrupt(false), numRes(0), numGym(0), diceSum(0), rimCups(cups) { 
     }
 
+// true: moveforward step
+// false: movebackward step
+void Player::move(size_t step, bool forward) {
+    // *** implement
+    if (forward){
+        position += step;
+        if (position >= 40){
+            position -= 40;
+            // return true;        // reports to main that the player pass COLLECT OSAP
+        }
+    } else {
+        if (position < step){
+            position = position - step + 40;
+        }
+        position -= step;
+    }
+    // return false            // reports to main that the player does not need to COLLECT OSAP
+} // Player::move
+
 // void Player::addOwnable(Ownable* o){
 //     properties.emplace_back(o);
 //     int groupSize = o->BlockGroupMembers.size();
@@ -152,6 +171,12 @@ void Player::setJailTurns(int n){
 int Player::getRimCups(){
     return rimCups;
 }
+
+// increase RimCup by 1, called when the player wins a cup in SLC or Needles Hall
+void Player::winCup(){
+    rimCups += 1;
+}
+
 void Player::setRimCups(int n){
     rimCups += n;
 }

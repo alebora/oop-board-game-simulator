@@ -48,6 +48,8 @@ export class Player{
         bool payPlayer();
         int total_worth();
         bool findMonopolies(string monopolyName);
+        void move(size_t step, bool forward);
+        void winCup();
         // void addOwnable(Ownable* o);
         // void removeOwnable(Ownable* o);
         // Ownable *getOwnable(int pos);
