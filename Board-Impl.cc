@@ -6,6 +6,10 @@ import <vector>;
 
 using namespace std;
 
+vector<vector<int>> tuitionVec; 
+vector<int> improvementCostVec;
+vector<string> monopolyBlockVec;
+
 Board::Board(): currPlayer(0), remainingRimCups(2) {
     //vec_buildings initilized harcoded;
 }
@@ -19,8 +23,13 @@ Player* Board::getPlayer(string s){
     return nullptr; 
 }
 
+// Board::~Board(){
+//     //clear all heap allocated ctors in addBuilding
+// }
+
 // void Board::addBuilding(string Bname, string owner, int improvements, int pos){ // !! Need to see how ctor is implemented for academic, gym, and res
 //     // !! Building ctor !! ?? can be any of 4 types:
+//     // !! MAKE EACH ONE HEAP ALLOCATED 
 //     Player *p;
 //     if (Bname != "BANK") {
 //         p = getPlayer(Bname);
@@ -28,13 +37,14 @@ Player* Board::getPlayer(string s){
 //         p = nullptr;
 //     }
 //     if (pos == 12 || pos == 28){ //gym
-//         Gym *b(Bname, pos, p); // NEED GYM CTOR
+//         Gym *b(Bname, pos, p); 
 //     }else if (pos == 5 || pos == 15 || pos == 25 || pos == 35){ //res
-//         Res *b(Bname, pos, p); // NEED RES CTOR
+//         Res *b(Bname, pos, p); 
 //     } else if (pos == 0 || pos == 2 || pos == 4 || pos == 7 || pos == 10 || pos == 17 || pos == 20 || pos == 22 || pos == 30 || pos == 33 || pos == 36 || pos == 38){ //unownable
 //         Unownable *b(Bname, pos);
-//     } else { //academic
-//         Academic *b(Bname, pos, p); // NEED ACADEMIC CTOR
+//     } else { 
+//         // Academic *b(Bname, pos, p, improvements, string monopolyBlock, vector<size_t> tuition, int improvementCost, bool hasMonopoly);
+//         // need to find the monopolyBlock, fill in all the tuitions manually :(, and improvement cost, and the hasmonopoly boolean.
 //     }
 //     vec_buildings.emplace_back(b);
 // }

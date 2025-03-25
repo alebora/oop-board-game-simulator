@@ -1,19 +1,22 @@
 export module Unownable;
 import Building;
 import Player;
-// import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
 using namespace std;
 
 export class Unownable : public Building {
 
-    // Add other private members if necessary
-
   public:
-    void printLongName(int lineNum);
+    // void executeUnownable(int pos, Player &p);
+    // void Tuition();
+    // void CoopFee();
+    // void DCTimsLine();
+    // void GoToTims();
     virtual void triggerEvent(Player& player) = 0;
-
+    
+    //methods not in UML yet: 
+    void printLongName(int lineNum); //NOT IN UML 
     // void setLiving();                   // Marks cell as alive. Called by Grid::turnOn.
     // void reset();                       // Resets neighbour count to 0.
 

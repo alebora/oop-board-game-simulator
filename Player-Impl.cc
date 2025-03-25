@@ -7,7 +7,7 @@ using namespace std;
 
 
 Player::Player(string name, char acronym, int cups, int money, int pos, int jail, int turns) : 
-    position(pos), name(name), money(money), acronym(acronym), inJail(jail), jailTurns(turns), isBankrupt(false), numRes(0), numGym(0), diceSum(0) { 
+    position(pos), name(name), money(money), acronym(acronym), inJail(jail), jailTurns(turns), isBankrupt(false), numRes(0), numGym(0), diceSum(0), rimCups(cups) { 
     }
 
 // void Player::addOwnable(Ownable* o){
@@ -146,7 +146,14 @@ int Player::getJailTurns(){
 }
 
 void Player::setJailTurns(int n){
-    jailTurns = n;
+    jailTurns += n;
+}
+
+int Player::getRimCups(){
+    return rimCups;
+}
+void Player::setRimCups(int n){
+    rimCups += n;
 }
 
 bool Player::getBankruptStatus(){

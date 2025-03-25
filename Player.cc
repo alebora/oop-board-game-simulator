@@ -17,6 +17,7 @@ export class Player{
     int numRes;
     int numGym;
     int diceSum;
+    int rimCups;
     public: 
         vector<string> monopolies;
         Player(string name, char acronym, int cups, int money, int pos, int jail, int turns);
@@ -38,6 +39,8 @@ export class Player{
         void setJailStatusNum(int n);
         int getJailTurns();
         void setJailTurns(int n);
+        int getRimCups();
+        void setRimCups(int n);
         bool getBankruptStatus();
         void setBankruptStatus(bool b);
         void printPlayer();

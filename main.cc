@@ -26,13 +26,16 @@ void setBuildings(Board *B){
     f.close();   
 }
 
-int DiceRoll(){
+vector<int> *DiceRoll(){
+    vector<int> v;
     srand(time(0));
     int dice1 = rand() % 6 + 1;
     cout << "Dice 1: " << dice1 <<std::endl;
     int dice2 = rand() % 6 + 1;
     cout << "Dice 2: " << dice2 <<std::endl;
-    return dice1 + dice2;
+    v.emplace_back(dice1);
+    v.emplace_back(dice2);
+    return &v;
 }
 
 void selectPlayers(int numPlayers, Board *b){
@@ -153,22 +156,60 @@ int main(int argc, char* argv[]){
             cout << " you entered: " << command << endl;
             if (command == "roll"){ // if in testing mode then roll <int> <int>
                 int sum_of_roll = 0;
-                if (fair_dice){
-                    sum_of_roll = DiceRoll();
+                vector<int> v; 
+                if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getJailStatusNum() == 0) {
+                    if (fair_dice){
+                        v = *DiceRoll();
+                        sum_of_roll = v[0] + v[1];
+                    } else { // are we allowed a unfair dice when in jail? 
+                        int x; 
+                        int y; 
+                        cin >> x; 
+                        cin >> y; 
+                        while (x < 0) {
+                            cout << "Oops, the first number is negative: please enter a postive number: " << endl;
+                            cin >> x;
+                        }
+                        while (x < 0) {
+                            cout << "Oops, the second number is negative: please enter a postive number: " << endl;
+                            cin >> y;
+                        }
+                        sum_of_roll = x + y;
+                    }
                 } else {
-                    int x; 
-                    int y; 
-                    cin >> x; 
-                    cin >> y; 
-                    while (x < 0) {
-                        cout << "Oops, the first number is negative: please enter a postive number: " << endl;
-                        cin >> x;
-                    }
-                    while (x < 0) {
-                        cout << "Oops, the second number is negative: please enter a postive number: " << endl;
-                        cin >> y;
-                    }
-                    sum_of_roll = x + y;
+                    // v = *DiceRoll();
+                    // cout << "the result of your dice are: " << endl; 
+                    // cout << "dice 1: " << v[0];
+                    // cout << "dice 2: " << v[1]; 
+                    // if (v[0] == v[1]) { //rolled doubles
+                    //     cout << "Congratulations, you rolled doubles. You got your coffee." << endl;
+                    //     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailStatusNum(0);
+                    //     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailTurns(0);
+                    // } else if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getJailTurns() < 3){ //still in jail, less turns than 3
+                    //     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailTurns(1);
+                    //     cout << "Sorry, no doubles, keep wiating in line. You are on your: " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getJailTurns() << " turn." << end;
+                    //     if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getRimCups() > 0){
+                    //         cout << "You have " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getRimCups() << " TimsCups, would you like to use it? [yes/no]: " << endl;
+                    //         string s; 
+                    //         while (!cin >> s || (s != "yes" && s != "no")){
+                    //             cout << "Invalid command please choose from [yes/no] (all lowercase): " << endl;
+                    //         }
+                    //         if (s == "yes"){
+                    //             boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setRimCups(-1);
+                    //             cout << "You have " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getRimCups() << " remaining TimsCups." << endl;
+                    //             cout << "Congratulations, you got your coffee." << endl;
+                    //             boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailStatusNum(0);
+                    //             boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailTurns(0);
+                    //         } else { // "no"
+                    //             cout << "Do you want ..." << endl; //!! FINSIH UP LOGIC 
+                    //         }
+                    //     }
+                    // } else { //third and final turn 
+                    //     cout << "This is your third turn in the line, $50 has been taken from your balance. You are free to leave next turn." << endl; // !! do they need to pay 50?? or can they choose not to 
+                    //     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailStatusNum(0);
+                    //     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney(-50);
+                    //     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailTurns(0);
+                    // }
                 }
                 //for testing:
                 cout << "your dice sum is: " << sum_of_roll << endl; 
