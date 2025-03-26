@@ -89,11 +89,11 @@ int Board::moneyOwed(Building *building, int diceSum){
     // TO IMPLEMENT
 }
 
-void Board::trade(string name, string giveMoney, string receiveMoney){
+void Board::trade(string name, string giveMoney, string receiveMoney, Player *player){
     // TO IMPLEMENT
 }
 
-void Board::academicImprovements(Building *property, string action){
+void Board::academicImprovements(Building *property, string action, Player *player){
     // TO IMPLEMENT
 }
 
@@ -134,7 +134,7 @@ void Board::pay(Player *whoOwes, int howMuchOwed, Player *toWhoOwed){
             string give;
             string receive;
             cin >> name >> give >> receive; 
-            trade(name, give, receive);
+            trade(name, give, receive, whoOwes);
 
         } else if (com == "improvements") { //improve <property> sell/buy
             string propertyName; 
@@ -142,7 +142,7 @@ void Board::pay(Player *whoOwes, int howMuchOwed, Player *toWhoOwed){
             cin >> propertyName >> status;
             Building *b = getBuilding(propertyName);
             if (b) {
-                academicImprovements(b, status); 
+                academicImprovements(b, status, whoOwes); 
             }
         } else if (com == "mortgage") { // mortgage <property>
             string propertyName; 

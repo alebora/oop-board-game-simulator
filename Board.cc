@@ -28,8 +28,8 @@ export class Board: public Subject {
         int getRemainingNumRimCups();
         void setRemainingNumRimCups(int n);
         int moneyOwed(Building *building, int diceSum);
-        void trade(string name, string giveMoney, string receiveMoney);
-        void academicImprovements(Building *property, string action);
+        void trade(string name, string giveMoney, string receiveMoney, Player *player);
+        void academicImprovements(Building *property, string action, Player *player);
         void mortgage(Building *property, Player *player);
         void bankrupt(Player *player, int Owed, Player *toWho);
         void auction(Building *building);

@@ -8,6 +8,7 @@ using namespace std;
 export class Unownable : public Building {
 
   public:
+    Unownable(string Bname, int pos);
     // void executeUnownable(int pos, Player &p);
     // void Tuition();
     // void CoopFee();

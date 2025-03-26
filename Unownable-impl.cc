@@ -9,6 +9,8 @@ using namespace std;
 
 // const int bottomLength = 7;
 
+Unownable::Unownable(string Bname, int pos): Building{Bname, pos, false} {}
+
 // void Unownable::executeUnownable(int pos, Player &p){
 //     if (pos == 10){ //DCTimsLine
 //         DCTimsLine();
