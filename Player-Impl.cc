@@ -1,7 +1,9 @@
 module Player;
+//import ownable;
 import <iostream>;
 import <string>;
 import <vector>;
+import PRNG;
 
 using namespace std;
 
@@ -188,3 +190,16 @@ bool Player::getBankruptStatus(){
 void Player::setBankruptStatus(bool b){
     isBankrupt = b;
 }
+
+// void Player::printAssests(){
+//     cout << "Assets of: " << getName() << " " << getAcronym() << ":" << endl; 
+//     cout << "Money: $" << getMoney() << "  Numer of RimCups: " << getRimCups() << endl; 
+//     cout << "Properties owned: "; 
+//     int ct = 0; 
+//     // while (ct < properties.size()){
+//     //     cout << properties[ct]->getBName() << " - improvement number: " << properties[ct]->getLevel() << endl;
+//     // }
+//     cout << "Just incase you were lazy to calculate total_worth... its: " << total_worth() << endl;
+//     cout << "---------------------------------------------------------" << endl;
+// }
+

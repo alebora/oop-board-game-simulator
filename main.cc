@@ -39,20 +39,38 @@ vector<int> *DiceRoll(){
 }
 
 void selectPlayers(int numPlayers, Board *b){
-    cout << "here are the options: ... a,b,c ..." << endl; 
+    cout << "Character select! Please choose your character, here are the options: <Name> <Char>" << endl;
+    cout << "---------------------------------------------------------------" << endl;
+    cout << "| Name | Dora  | Boots  | Swiper  |  Map  |  Backpack |  Map  |" << endl;
+    cout << "---------------------------------------------------------------" << endl;
+    cout << "| Char |   D   |   B    |   S     |   M   |    P      |   T   |" << endl;
+    cout << "---------------------------------------------------------------" << endl;
+ 
     int ct = 0; 
-    char c; 
+    //char c; 
     string name;
-    string line;
-    string i;
+    char chara;
+    //string i;
+    while (ct < numPlayers){
+        while (!(cin >> name)){
+            cout << "invalid input, please try again" << endl;
+        }
+        while (!(cin >> chara)){
+            cout << "invalid input, please try again" << endl;
+        }
+        Player p(name, chara, 0, 1500, 0, 0, 0); 
+        //b->vec_players_selected.emplace_back(&p);
+        b->addPlayer(&p);
+        ++ct;
+    }
 
     // For Testing:
-    Player p1("P1", 'A', 0, 1500, 0, 0, 0);
-    b->addPlayer(&p1);
-    Player p2("P2", 'B', 0, 1500, 0, 0, 0);
-    b->addPlayer(&p2);
-    Player p3("P3", 'C', 0, 1500, 0, 0, 0);
-    b->addPlayer(&p3);
+    // Player p1("P1", 'A', 0, 1500, 0, 0, 0);
+    // b->addPlayer(&p1);
+    // Player p2("P2", 'B', 0, 1500, 0, 0, 0);
+    // b->addPlayer(&p2);
+    // Player p3("P3", 'C', 0, 1500, 0, 0, 0);
+    // b->addPlayer(&p3);
 }
 
 // bool loadGame(char* filename, Board *B){ //need to have info on ownable buildings to implement
@@ -150,11 +168,17 @@ int main(int argc, char* argv[]){
         // Player p3("P3", 'C', 0, 1500, 0, 0, 0);
         // boardMain.addPlayer(&p3);
         cout << "number of players is: " << boardMain.getNumPlayers() << endl; 
+        // cout << "they are: " << endl; 
+        // int ctt = 0; 
+        // while (ctt < n){
+        //     cout << boardMain.vec_players_selected[ctt]->getName() << " " << boardMain.vec_players_selected[ctt]->getAcronym() << endl;
+        //     ++ctt;
+        // }
 
         string command;
         while (cin >> command){
             cout << " you entered: " << command << endl;
-            if (command == "roll"){ // if in testing mode then roll <int> <int>
+            if (command == "roll"){ // roll OR roll <int> <int> if -testing in args
                 int sum_of_roll = 0;
                 vector<int> v; 
                 if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getJailStatusNum() == 0) {
@@ -256,7 +280,7 @@ int main(int argc, char* argv[]){
                 // }
                 //boardMain.stateOfBoardChange(); //notifies there is change in display 
                 //boardMain.notifyObservers(); //notifies there is change in display 
-            }else if (command == "save"){ 
+            }else if (command == "save"){ // save <filename>
                 string filename;
                 cin >> filename;
                 while (filename == "") {
@@ -266,7 +290,7 @@ int main(int argc, char* argv[]){
                 ofstream f{filename};
                 f << "INSERT THE GAME INFO HERE" << endl; //GIVE ALL GAME INFO HERE; *** // !!
                 f.close(); 
-            }else if (command == "next"){
+            }else if (command == "next"){ // next 
                 cout << "prev: " << boardMain.getCurrPlayer() << endl;
                 int numPlayers = boardMain.getNumPlayers();
                 boardMain.setCurrPlayer(boardMain.getCurrPlayer() + 1);
@@ -274,14 +298,26 @@ int main(int argc, char* argv[]){
                     boardMain.setCurrPlayer(0);
                 }
                 cout << "new: " << boardMain.getCurrPlayer()<< endl;
-            }else if (command == "trade"){
+            }else if (command == "trade"){ // trade <name> <give> <receive>
                 //trade(); //IMPLEMENT
-            }else if (command == "improvements"){
+            }else if (command == "improve"){ // improve <property> buy/sell
                 //improvements(); //IMPLEMENT
-            }else if (command == "mortgage"){
+            }else if (command == "mortgage"){ // mortgage <property>
                 //mortgage(); //IMPLEMENT
-            } else if (command == "bankrupt"){
+            } else if (command == "bankrupt"){ // bankrupt
                 //bankrupt(); 
+            } else if (command == "unmortgage"){ // unmortgage <property>
+                 
+            } else if (command == "assets"){ // assets
+                //boardMain.vec_players_selected[boardMain.getCurrPlayer()]->printAssests();
+            } else if (command == "all"){ // all
+                // int cttt = 0;
+                // boardMain.vec_players_selected[boardMain.getCurrPlayer()]->printAssests(); // extra feature: prints the player who called assets before everyone else
+                // while (cttt < boardMain.vec_players_selected.size()){
+                //     if (cttt != boardMain.getCurrPlayer()){
+                //         boardMain.vec_players_selected[cttt]->printAssests();
+                //     }
+                // }
             } else {
                 cout << "Not a valid command, please try again: " << endl;
             }
