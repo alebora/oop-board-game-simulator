@@ -27,3 +27,8 @@ void Academic::buyImprovement() {
 void Academic::sellImprovement() {
     --improvementLevel;
 }
+
+string  Academic::getMonopolyBlock() const {
+    return monopolyBlock;
+}
+

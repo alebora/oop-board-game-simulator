@@ -23,4 +23,5 @@ export class Academic: public Ownable {
         void buyImprovement();
         void sellImprovement();
         int getImprovementCost() const;
+        string getMonopolyBlock() const;
 };
