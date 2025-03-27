@@ -1,5 +1,10 @@
 module Board;
 import Player;
+import academic;
+import Building;
+import gym;
+import ownable;
+import residence;
 import <iostream>;
 import <string>;
 import <vector>;
@@ -87,10 +92,12 @@ void Board::setRemainingNumRimCups(int n){
 
 int Board::moneyOwed(Building *building, int diceSum){
     // TO IMPLEMENT
+    
 }
 
 void Board::trade(string name, string giveMoney, string receiveMoney, Player *player){
     // TO IMPLEMENT
+
 }
 
 void Board::academicImprovements(Building *property, string action, Player *player){

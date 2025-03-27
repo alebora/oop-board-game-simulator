@@ -11,7 +11,7 @@ import MoveForward;
 import MoveBackward;
 import GainMoney;
 import LoseMoney;
-import CaughtByTims;
+//import CaughtByTims;
 import GoToCollectOSAP;
 using namespace std;
 
