@@ -173,6 +173,13 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
     bool giveBuilding = false;
     bool receiveBuilding = false;
 
+    bool isGiveMortgaged = false;
+    bool isReceiveMortgaged = false;
+
+    int giveMortgage = 0; //if mortgaged, player receive building + pay 10%
+    int receiveMortgage = 0;  //if mortgaged, player receive building + pay 10%
+
+    //doing check for mortgage in here and calcalate the 10%
     vector<string> trading = {giveMoney, receiveMoney};
     Ownable *give;
     Ownable *receive;
@@ -225,12 +232,16 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
     //2. check BType
     //3. cast to the correct type
     //4. redefine give and receive
+    //5. if the building is mortgaged, need to consider differently!! march 28th
+    
 
     //Money Building
     if (!giveBuilding && receiveBuilding) {
         //how much the player is giving, convert to integer
         int giveM = stoi(giveMoney);
         int bank = reqFrom->getMoney(); 
+
+        //check if the building is mortgaged
 
         if (giveM > bank) {
             cout << "Trade rejected. You do not have enough money to make this trade" <<endl;
@@ -291,6 +302,8 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
             cout << "Trade rejected. " << giveName << "does not own " << giveMoney <<endl;
             return;
         }
+
+
         receive->removeOwner();
         receive->setOwner(player);
 
@@ -348,13 +361,78 @@ void Board::academicImprovements(Building *property, string action, Player *play
 
 void Board::mortgage(Building *property, Player *player){
     // TO IMPLEMENT
-    
+
+    //1. check the owner of property is in fact player
+    //2. check mortgage is false, otherwise, cerr already mortgaged
+    //3. determine building type
+    //4. check improvements are sold
+    //5. change mortgage to true, by setMortgage(false) => non-owners do not have to pay rent when landed
+    //6. increase player money by half of the property cost, through getCost in ownable
+
+    cout << "hello" <<endl;
+
+    //Ownable *ownable = static_cast<Ownable*>(property);
+    Academic *ownable = static_cast<Ownable*>(property);
+    //above can only access ownable type
+    Player *tmp = ownable->getOwner();
+
+    /*
+            if (tmp == nullptr) {
+        std::cerr << "Mortgage failed. You do not own this property." << endl;
+        return;
+    }
+    string name = tmp->getName();
+
+    if (name != player->getName()) {
+        std::cerr << "Mortgage failed. You do not own this property." << endl;
+        return;
+    }
+    //check bType
+    //mortgageThis = static_cast to A R or G else 
+
+    if (ownable->getBType() == 'A') {
+
+        Academic *a = static_cast<Academic*>(ownable);
+        if (a->getLevel() != 0) {
+            std::cerr << "Mortgage failed. You must sell improvements before mortgaging." << endl;          
+            return;
+        }
+
+        int mortgageValue = a->getCost() / 2;
+        player->setMoney(mortgageValue);
+        a->setMortgageState(true);
+
+
+    } else if (ownable->getBType() == 'R') {
+
+        Residence *r = static_cast<Residence*>(ownable);
+        int mortgageValue = r->getCost() / 2;
+        player->setMoney(mortgageValue);
+        r->setMortgageState(true);
+
+    } else if (ownable->getBType() == 'G') {
+
+        Gym *g = static_cast<Gym*>(ownable);
+        int mortgageValue = g->getCost() / 2;
+        player->setMoney(mortgageValue);
+        g->setMortgageState(true);
+
+    } else {
+        std::cerr << "Mortgage failed. Property is not of Academic, Residence, or Gym." << endl;
+        return;
+    }
+
+    cout << "Mortgage successful!" << endl;
+    return;
+    */
+
 }
 
 void Board::bankrupt(Player *player, int Owed, Player *toWho){
     // TO IMPLEMENT
     //need to verify if they really want to declare bankruptcy 
     //NEED to chnage the currPlayer to next player index (check doc) 
+    
 }
 
 void Board::auction(Building *building){

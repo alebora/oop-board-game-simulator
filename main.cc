@@ -436,6 +436,16 @@ int main(int argc, char* argv[]){
                 //improvements(); //IMPLEMENT
             }else if (command == "mortgage"){ // mortgage <property>
                 //mortgage(); //IMPLEMENT
+
+                /*
+                string propertyName; 
+                cin >> propertyName;
+                Building *b = boardMain.getBuilding(propertyName).get();
+                if (b) {
+                    boardMain.mortgage(b, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get()); 
+                }
+                */
+
             } else if (command == "bankrupt"){ // bankrupt
                 //bankrupt(); 
             } else if (command == "unmortgage"){ // unmortgage <property>
