@@ -93,6 +93,73 @@ void Board::setRemainingNumRimCups(int n){
 int Board::moneyOwed(Building *building, int diceSum){
     // TO IMPLEMENT
     
+    Ownable *ownableBuilding = static_cast<Academic*>(building);
+
+    char bType = ownableBuilding->getBType();
+    int owed = 0;
+    if (bType == 'A') {
+
+        Academic *academic = static_cast<Academic*>(ownableBuilding);
+        //check the number of academic properties an owner owns?
+        //tuition is the rent
+        //Tuition is doubled for each building that has no improvements when the monopoly is owned by a single player.
+        //check if the current building is a part of a monopoly and if there are no improvements
+        //otherwise, just regular tuition cost
+        
+        //1. can check if the current building (getMonopolyBlock) is a part of the monopoly vector of player
+        //2. if is part of a monopoly, check if there are improvements (getImprovementLevel) if 0 => double, else return Tuition
+        
+        //1. get owner
+        //2. from academic building -> get getMonopolyBlock
+        //2. from player, findMonopolies() => T/F
+
+        Player *owner = academic->getOwner();
+
+        if (owner == nullptr) {
+            std::cerr << "Error. There is no owner for this building." <<endl;
+            return 0;
+        }
+
+        string monBlock = academic->getMonopolyBlock();
+        bool isInMonopoly = owner->findMonopolies(monBlock);
+
+        if (isInMonopoly) {
+            int impLevel = academic->getLevel();
+            if(impLevel == 0) {
+                return 2*academic->getTuition();
+            }
+        }
+
+        return academic->getTuition();
+
+    } else if (bType = 'R') {
+        Residence *residence = static_cast<Residence*>(ownableBuilding);
+        Player *owner = residence->getOwner();
+
+        if (owner == nullptr) {
+            std::cerr << "Error. There is no owner for this building." <<endl;
+            return 0;
+        }
+
+        int numOwner = owner->getNumResOwned();
+        return residence->calcResCost(numOwner);
+
+    } else if (bType == 'G') {
+
+        Gym *gym = static_cast<Gym*>(ownableBuilding);
+        Player* owner = gym->getOwner();
+
+        if (owner == nullptr) {
+            std::cerr << "Error. There is no owner for this building." <<endl;
+            return 0;
+        }
+        
+        int gymNum = owner->getNumGymOwned();
+        return gym->usageFee(diceSum, gymNum);
+    }
+
+    return owed;
+
 }
 
 void Board::trade(string name, string giveMoney, string receiveMoney, Player *player){
