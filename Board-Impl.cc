@@ -96,8 +96,173 @@ int Board::moneyOwed(Building *building, int diceSum){
 }
 
 void Board::trade(string name, string giveMoney, string receiveMoney, Player *player){
-    // TO IMPLEMENT
+    //Player *player is the person requesting the trade
+    Player *reqFrom = getPlayer(name);
 
+    //if user is receiving/giving building else money and stoi()
+    bool giveBuilding = false;
+    bool receiveBuilding = false;
+
+    vector<string> trading = {giveMoney, receiveMoney};
+    Academic *give;
+    Academic *receive;
+    for (int i = 0; i < trading.size(); ++ i) {
+        for (int j = 0; j < vec_buildings.size(); ++j) {
+            if (vec_buildings[j]->getBName() == trading[i]){
+                if (trading[i] == giveMoney) {
+                    giveBuilding = true;
+                    give = static_cast<Academic*>(vec_buildings[j]);
+                    if(give->getBType() == 'A') {
+                        
+                        if(give->getLevel() != 0) {
+                            cout << "Trade rejected, you cannot trade a property with improvements." << endl;      
+                        }
+                        return;
+                    }
+                } else {
+                    receiveBuilding = true;
+                    receive = static_cast<Academic*>(vec_buildings[j]);
+                    if(receive->getBType() == 'A') {
+                        if(receive->getLevel() != 0) {
+                            cout << "Trade rejected. You cannot trade a property with improvements." << endl;      
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    //Accept/Reject Stage
+    cout << name << ", do you accept or reject this offer?" << endl;
+    string choice;
+    while(true) {
+        cout << "Please enter accept or reject." << endl;      
+        cin >> choice;
+        if(choice == "accept" || choice == "reject") {
+            break;
+        }
+    }
+
+    if (choice == "reject") {
+        cout << name << " has rejected the offer.";
+        return;
+    }
+
+    //Money Building
+    if (!giveBuilding && receiveBuilding) {
+        //how much the player is giving, convert to integer
+        int giveM = stoi(giveMoney);
+        int bank = reqFrom->getMoney(); 
+
+        if (giveM > bank) {
+            cout << "Trade rejected. You do not have enough money to make this trade" <<endl;
+            return;
+        }
+        Player *tmpPlayer = receive->getOwner();
+        if(tmpPlayer == nullptr) {
+            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+            return;
+        }
+
+        string receiveName = tmpPlayer->getName();
+
+        if ( receiveName != name) { //verifying ownership
+            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+            return;
+        }
+
+        receive->removeOwner();
+        receive->setOwner(player);
+        reqFrom->setMoney(giveM);
+        giveM = -giveM;
+        player->setMoney(giveM);
+
+        cout << "Trade succesful! " <<endl;
+        return;
+    }
+
+    //Building Building
+    if (giveBuilding && receiveBuilding) {
+        Player *tmpPlayer1 = receive->getOwner();
+
+        if(tmpPlayer1) {
+            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+            return;
+        }
+
+        string receiverBuilding = tmpPlayer1->getName();
+
+        if ( receiverBuilding != name ) { //verifying ownership
+            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+            return;
+        }
+
+        string giveName = player->getName();
+
+        Player *tmpPlayer = give->getOwner();
+        //if no owner
+        if(tmpPlayer == nullptr) {
+            cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
+            return;
+        }
+
+        string buildingOwner = tmpPlayer->getName();
+
+
+        if ( buildingOwner != giveName) { //verifying ownership
+            cout << "Trade rejected. " << giveName << "does not own " << giveMoney <<endl;
+            return;
+        }
+        receive->removeOwner();
+        receive->setOwner(player);
+
+        give->removeOwner();
+        give->setOwner(reqFrom);
+
+        cout << "Trade succesful! " <<endl;
+        return;
+    }
+
+    //Building Money 
+    if (giveBuilding && !receiveBuilding) {
+        int receiveM = stoi(receiveMoney);
+        int bank = reqFrom->getMoney(); 
+
+        if (receiveM > bank) {
+            cout << "Trade rejected. " << name << " does not have enough money to make this trade" <<endl;
+            return;
+        }
+
+        string giveName = player->getName();
+        Player *tmpPlayer = give->getOwner();
+
+        if(tmpPlayer == nullptr) {
+            cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
+            return;
+        }
+
+        string buildingOwner = tmpPlayer->getName();
+
+        if (buildingOwner != giveName) { //verifying ownership
+            cout << "Trade rejected. " << giveName << "does not own " << giveMoney <<endl;
+            return;
+        }
+
+        give->removeOwner();
+        give->setOwner(reqFrom);
+
+        player->setMoney(receiveM);
+        receiveM = -receiveM;
+        reqFrom->setMoney(receiveM);
+        cout << "Trade succesful! " <<endl;
+        return;
+        
+    } else {
+        //throw error
+        std::cerr << "Unsuccesful attempt at trading. " << endl;
+        return;
+    }    
 }
 
 void Board::academicImprovements(Building *property, string action, Player *player){
