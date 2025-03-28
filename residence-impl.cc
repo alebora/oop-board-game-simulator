@@ -23,4 +23,6 @@ int Residence::calcResCost(int ownedNum) {
     return feeOwed;
 }
 
+char Residence::getBType() const { return 'R'; }
+
 

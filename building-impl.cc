@@ -1,5 +1,6 @@
 module Building;
 import <string>;
+import <iostream>;
 
 using namespace std;
 
@@ -16,6 +17,17 @@ size_t Building::getBPos() const {
 bool Building::getOwnableStatus() const {
     return isOwnable;
 }
+void Building::setOwnable(bool b){
+    isOwnable = b;
+}
 
-Building::~Building() {}
+void Building::setImprovments(size_t numImprovs){
+    cout << "TRYING TO SET IMPROVEMENT NUM IN BUILDING CLASS" << endl;
+}
+
+int Building::getLevel(){
+    return -1;
+}
+
+//Building::~Building() {}
 

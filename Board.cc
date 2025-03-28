@@ -4,6 +4,7 @@ import Subject;
 import Building;
 import <iostream>;
 import <string>;
+import <memory>;
 import <vector>;
 
 using namespace std;
@@ -13,16 +14,16 @@ export class Board: public Subject {
     int remainingRimCups;
     public: 
         Board();
-        vector<Player*> vec_players_selected;
-        vector<Building*> vec_buildings;
+        vector<unique_ptr<Player>> vec_players_selected;
+        vector<unique_ptr<Building>> vec_buildings;
         //Player* getPlayer(int n); //DEL LATER
-        Player* getPlayer(string s); //DID NOT ADD TO UML BUT IS IMPLEMENTED 
+        unique_ptr<Player> getPlayer(string s); //DID NOT ADD TO UML BUT IS IMPLEMENTED 
         void printBoard();
         void stateOfBoardChange();
         int getNumPlayers();
-        Building* getBuilding(string Bname);
-        void addPlayer(Player *player);
-        void addBuilding(string Bname, string owner, int improvements, int pos);
+        unique_ptr<Building> getBuilding(string Bname);
+        void addPlayer(unique_ptr<Player> player);
+        void addBuildingINIT(string Bname, string block, Player *owner, int improvements, int pos, int pur, int imp, size_t z, size_t o, size_t t, size_t thr, size_t f, size_t fiv);
         int getCurrPlayer();
         void setCurrPlayer(int n);
         int getRemainingNumRimCups();
