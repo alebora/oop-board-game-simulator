@@ -369,15 +369,15 @@ void Board::mortgage(Building *property, Player *player){
     //5. change mortgage to true, by setMortgage(false) => non-owners do not have to pay rent when landed
     //6. increase player money by half of the property cost, through getCost in ownable
 
-    cout << "hello" <<endl;
+    //cout << "hello" <<endl;
 
-    //Ownable *ownable = static_cast<Ownable*>(property);
-    Academic *ownable = static_cast<Ownable*>(property);
+    Ownable *ownable = static_cast<Ownable*>(property);
+    //Academic *ownable = static_cast<Ownable*>(property);
     //above can only access ownable type
     Player *tmp = ownable->getOwner();
 
-    /*
-            if (tmp == nullptr) {
+    
+    if (tmp == nullptr) {
         std::cerr << "Mortgage failed. You do not own this property." << endl;
         return;
     }
@@ -424,7 +424,6 @@ void Board::mortgage(Building *property, Player *player){
 
     cout << "Mortgage successful!" << endl;
     return;
-    */
 
 }
 
