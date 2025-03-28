@@ -357,7 +357,23 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
 
 void Board::academicImprovements(Building *property, string action, Player *player){
     // TO IMPLEMENT
-}
+    if (action == "buy") {
+        Academic *a = static_cast<Academic*>(property);
+        //take money out of their money
+        int impCost = a->getImprovementCost();
+        impCost = -impCost;
+
+        player->setMoney(impCost);
+        a->buyImprovement();
+    }
+    if (action == "sell") {
+        //add money into their money
+        //check which monopoly block they are a part of and check if they have a monopoly
+        Academic *a = static_cast<Academic*>(property);
+        int impCost = a->getImprovementCost();
+        player->setMoney(impCost);
+        a->sellImprovement();
+    }
 
 void Board::mortgage(Building *property, Player *player){
     // TO IMPLEMENT
