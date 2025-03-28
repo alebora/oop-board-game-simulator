@@ -166,214 +166,305 @@ int Board::moneyOwed(Building *building, int diceSum){
 }
 
 void Board::trade(string name, string giveMoney, string receiveMoney, Player *player){
-    //Player *player is the person requesting the trade
-    Player *reqFrom = getPlayer(name).get();
+    try {
+        //Player *player is the person trade is requested from
+        Player *reqFrom = getPlayer(name).get();
 
-    //if user is receiving/giving building else money and stoi()
-    bool giveBuilding = false;
-    bool receiveBuilding = false;
+        //if user is receiving/giving building else money and stoi()
+        bool giveBuilding = false;
+        bool receiveBuilding = false;
 
-    bool isGiveMortgaged = false;
-    bool isReceiveMortgaged = false;
+        bool isGiveMortgaged = false;
+        bool isReceiveMortgaged = false;
 
-    int giveMortgage = 0; //if mortgaged, player receive building + pay 10%
-    int receiveMortgage = 0;  //if mortgaged, player receive building + pay 10%
+        int giveMortgage = 0; //if mortgaged, player receive building + pay 10%
+        int receiveMortgage = 0;  //if mortgaged, player receive building + pay 10%
 
-    //doing check for mortgage in here and calcalate the 10%
-    vector<string> trading = {giveMoney, receiveMoney};
-    Ownable *give;
-    Ownable *receive;
-    for (int i = 0; i < trading.size(); ++ i) {
-        for (int j = 0; j < vec_buildings.size(); ++j) {
-            if (vec_buildings[j]->getBName() == trading[i]){
-                if (trading[i] == giveMoney) {
-                    giveBuilding = true;
-                    //should this be academic or OWNABLE??? is the below correct
-                    give = static_cast<Ownable*>(vec_buildings[j].get());
-                    if(give->getBType() == 'A') {
-                        //CAST TO ACADEMIC?????
-                        if(give->getLevel() != 0) {
-                            cout << "Trade rejected, you cannot trade a property with improvements." << endl;      
+        //if there is time, do a check for ownership for building in the below loop?
+
+        //doing check for mortgage in here and calcalate the 10%
+        vector<string> trading = {giveMoney, receiveMoney};
+        Ownable *give;
+        Ownable *receive;
+        for (int i = 0; i < trading.size(); ++ i) {
+            for (int j = 0; j < vec_buildings.size(); ++j) {
+                if (vec_buildings[j]->getBName() == trading[i]){
+                    if (trading[i] == giveMoney) {
+                        giveBuilding = true;
+                        //should this be academic or OWNABLE??? is the below correct
+                        give = static_cast<Ownable*>(vec_buildings[j].get());
+                        if(give->getBType() == 'A') {
+                            //CAST TO ACADEMIC?????
+                            if(give->getLevel() != 0) {
+                                cout << "Trade rejected, you cannot trade a property with improvements." << endl;      
+                            }
+                            return;
                         }
-                        return;
-                    }
-                } else {
-                    receiveBuilding = true;
-                    receive = static_cast<Ownable*>(vec_buildings[j].get());
-                    if(receive->getBType() == 'A') {
-                        if(receive->getLevel() != 0) {
-                            cout << "Trade rejected. You cannot trade a property with improvements." << endl;      
+                        if (give->getMortgageState()) { //get getMortgageState
+                            isGiveMortgaged = true;
+                            giveMortgage = give->getCost() * 0.1;
                         }
-                        return;
+                    } else {
+                        receiveBuilding = true;
+                        receive = static_cast<Ownable*>(vec_buildings[j].get());
+                        if(receive->getBType() == 'A') {
+                            if(receive->getLevel() != 0) {
+                                cout << "Trade rejected. You cannot trade a property with improvements." << endl;      
+                            }
+                            return;
+                        }
+                        if (receive->getMortgageState()) { //get getMortgageState
+                            isGiveMortgaged = true;
+                            giveMortgage = receive->getCost() * 0.1;
+                        }
                     }
                 }
             }
         }
-    }
 
-    //Accept/Reject Stage
-    cout << name << ", do you accept or reject this offer?" << endl;
-    string choice;
-    while(true) {
-        cout << "Please enter accept or reject." << endl;      
-        cin >> choice;
-        if(choice == "accept" || choice == "reject") {
-            break;
+        //Accept/Reject Stage
+        cout << name << ", do you accept or reject this offer?" << endl;
+        string choice;
+        while(true) {
+            cout << "Please enter accept or reject." << endl;      
+            cin >> choice;
+            if(choice == "accept" || choice == "reject") {
+                break;
+            }
         }
-    }
 
-    if (choice == "reject") {
-        cout << name << " has rejected the offer.";
-        return;
-    }
-
-    //HERE:
-    //1. check bool of giveBuilding and receiveBuilding
-    //2. check BType
-    //3. cast to the correct type
-    //4. redefine give and receive
-    //5. if the building is mortgaged, need to consider differently!! march 28th
-    
-
-    //Money Building
-    if (!giveBuilding && receiveBuilding) {
-        //how much the player is giving, convert to integer
-        int giveM = stoi(giveMoney);
-        int bank = reqFrom->getMoney(); 
-
-        //check if the building is mortgaged
-
-        if (giveM > bank) {
-            cout << "Trade rejected. You do not have enough money to make this trade" <<endl;
-            return;
-        }
-        Player *tmpPlayer = receive->getOwner();
-        if(tmpPlayer == nullptr) {
-            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+        if (choice == "reject") {
+            cout << name << " has rejected the offer.";
             return;
         }
 
-        string receiveName = tmpPlayer->getName();
-
-        if ( receiveName != name) { //verifying ownership
-            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
-            return;
-        }
-
-        receive->removeOwner();
-        receive->setOwner(player);
-        reqFrom->setMoney(giveM);
-        giveM = -giveM;
-        player->setMoney(giveM);
-
-        cout << "Trade succesful! " <<endl;
-        return;
-    }
-
-    //Building Building
-    if (giveBuilding && receiveBuilding) {
-        Player *tmpPlayer1 = receive->getOwner();
-
-        if(tmpPlayer1) {
-            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
-            return;
-        }
-
-        string receiverBuilding = tmpPlayer1->getName();
-
-        if ( receiverBuilding != name ) { //verifying ownership
-            cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
-            return;
-        }
-
-        string giveName = player->getName();
-
-        Player *tmpPlayer = give->getOwner();
-        //if no owner
-        if(tmpPlayer == nullptr) {
-            cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
-            return;
-        }
-
-        string buildingOwner = tmpPlayer->getName();
-
-
-        if ( buildingOwner != giveName) { //verifying ownership
-            cout << "Trade rejected. " << giveName << "does not own " << giveMoney <<endl;
-            return;
-        }
-
-
-        receive->removeOwner();
-        receive->setOwner(player);
-
-        give->removeOwner();
-        give->setOwner(reqFrom);
-
-        cout << "Trade succesful! " <<endl;
-        return;
-    }
-
-    //Building Money 
-    if (giveBuilding && !receiveBuilding) {
-        int receiveM = stoi(receiveMoney);
-        int bank = reqFrom->getMoney(); 
-
-        if (receiveM > bank) {
-            cout << "Trade rejected. " << name << " does not have enough money to make this trade" <<endl;
-            return;
-        }
-
-        string giveName = player->getName();
-        Player *tmpPlayer = give->getOwner();
-
-        if(tmpPlayer == nullptr) {
-            cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
-            return;
-        }
-
-        string buildingOwner = tmpPlayer->getName();
-
-        if (buildingOwner != giveName) { //verifying ownership
-            cout << "Trade rejected. " << giveName << "does not own " << giveMoney <<endl;
-            return;
-        }
-
-        give->removeOwner();
-        give->setOwner(reqFrom);
-
-        player->setMoney(receiveM);
-        receiveM = -receiveM;
-        reqFrom->setMoney(receiveM);
-        cout << "Trade succesful! " <<endl;
-        return;
+        //HERE:
+        //1. check bool of giveBuilding and receiveBuilding
+        //2. check BType
+        //3. cast to the correct type
+        //4. redefine give and receive
+        //5. if the building is mortgaged, need to consider differently!! march 28th
         
-    } else {
-        //throw error
-        std::cerr << "Unsuccesful attempt at trading. " << endl;
+
+        //Money Building
+        if (!giveBuilding && receiveBuilding) {
+            //how much the player is giving, convert to integer
+            int giveM = stoi(giveMoney);
+            int bank = player->getMoney(); 
+
+        
+            //check if the building is mortgaged
+
+            if ((giveM + receiveMortgage) > bank) {
+                cout << "Trade rejected. You do not have enough money to make this trade" <<endl;
+                return;
+            }
+            Player *tmpPlayer = receive->getOwner();
+            if(tmpPlayer == nullptr) {
+                cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+                return;
+            }
+
+            string receiveName = tmpPlayer->getName();
+
+            if ( receiveName != name) { //verifying ownership
+                cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+                return;
+            }
+
+            //giveMortgage = -giveMortgage;
+            receiveMortgage = -receiveMortgage;
+
+            receive->removeOwner();
+            receive->setOwner(player);
+            reqFrom->setMoney(giveM);
+
+            giveM = -giveM;
+            player->setMoney(giveM);
+            player->setMoney(receiveMortgage);
+
+            cout << "Trade succesful! " <<endl;
+            return;
+        }
+
+        //Building Building
+        if (giveBuilding && receiveBuilding) {
+            Player *tmpPlayer1 = receive->getOwner();
+
+            if(tmpPlayer1) {
+                cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+                return;
+            }
+
+            string receiverBuilding = tmpPlayer1->getName();
+
+            if ( receiverBuilding != name ) { //verifying ownership
+                cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
+                return;
+            }
+
+            string giveName = player->getName();
+
+            Player *tmpPlayer = give->getOwner();
+            //if no owner
+            if(tmpPlayer == nullptr) {
+                cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
+                return;
+            }
+
+            string buildingOwner = tmpPlayer->getName();
+
+
+            if ( buildingOwner != giveName) { //verifying ownership
+                cout << "Trade rejected. " << giveName << "does not own " << giveMoney <<endl;
+                return;
+            }
+
+            //check mortgaging 
+            int bankP = player->getMoney(); 
+            int bankR = reqFrom->getMoney(); 
+
+            if ( receiveMortgage > bankP ) {
+                cout << "Trade rejected. You do not have enough money to make this trade" <<endl;
+                return;
+            }
+
+            if ( giveMortgage > bankR ) {
+                cout << "Trade rejected. You do not have enough money to make this trade" <<endl;
+                return;
+            }
+
+            giveMortgage = -giveMortgage;
+            receiveMortgage = -receiveMortgage;
+
+            reqFrom->setMoney(giveMortgage);
+            player->setMoney(receiveMortgage);
+
+            receive->removeOwner();
+            receive->setOwner(player);
+
+            give->removeOwner();
+            give->setOwner(reqFrom);
+
+            cout << "Trade succesful! " <<endl;
+            return;
+        }
+
+        //Building Money 
+        if (giveBuilding && !receiveBuilding) {
+            int receiveM = stoi(receiveMoney);
+            int bank = reqFrom->getMoney(); 
+
+            if ((receiveM + giveMortgage) > bank) {
+                cout << "Trade rejected. " << name << " does not have enough money to make this trade" <<endl;
+                return;
+            }
+
+            string giveName = player->getName();
+            Player *tmpPlayer = give->getOwner();
+
+            if(tmpPlayer == nullptr) {
+                cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
+                return;
+            }
+
+            string buildingOwner = tmpPlayer->getName();
+
+            if (buildingOwner != giveName) { //verifying ownership
+                cout << "Trade rejected. " << giveName << "does not own " << giveMoney <<endl;
+                return;
+            }
+
+            give->removeOwner();
+            give->setOwner(reqFrom);
+
+            player->setMoney(receiveM);
+
+            receiveM = -receiveM;
+            giveMortgage = -giveMortgage;
+            reqFrom->setMoney(receiveM);
+            reqFrom->setMoney(giveMortgage);
+            cout << "Trade succesful! " <<endl;
+            return;
+            
+        } else {
+            //throw error
+            std::cerr << "Unsuccesful attempt at trading. " << endl;
+            return;
+        }    
+    } catch (...) {
+        std::cerr << "Invalid action. Denied." <<endl;
         return;
-    }    
+    }
 }
 
-void Board::academicImprovements(Building *property, string action, Player *player){
+void Board::academicImprovements(Building *property, string action, Player *player){ //NEED TO CHECK IF USER GETS BANKRUPT
     // TO IMPLEMENT
-    if (action == "buy") {
-        Academic *a = static_cast<Academic*>(property);
-        //take money out of their money
-        int impCost = a->getImprovementCost();
-        impCost = -impCost;
 
-        player->setMoney(impCost);
-        a->buyImprovement();
-    }
-    if (action == "sell") {
-        //add money into their money
-        //check which monopoly block they are a part of and check if they have a monopoly
-        Academic *a = static_cast<Academic*>(property);
-        int impCost = a->getImprovementCost();
-        player->setMoney(impCost);
-        a->sellImprovement();
-    }
+    //verifying ownership
+   try {
+        string playerName = player->getName();
+        Ownable *o = static_cast<Ownable*>(property);
+        if (o->getOwner() == nullptr) {
+            std::cerr << "Unsuccesful attempt at improvement. The building has no owner. " << endl;
+            return;
+        }
+
+        string buildingOwner = o->getOwner()->getName();
+
+        if (buildingOwner != playerName) { //verifying ownership
+            std::cerr << "Unsuccesful attempt at improvement. " << playerName << "does not own " << property->getBName() <<endl;
+            return;
+        }
+
+
+        if (action == "buy") {
+            Academic *a = static_cast<Academic*>(property);
+
+            //1. check that player owns that building
+            //2. check if they have enough money -> checking bankruptcy
+
+
+            //take money out of their money
+            int impCost = a->getImprovementCost();
+
+            if (player->getMoney() < impCost) {
+                std::cerr << "Unable to purchase improvement, you do not have enough funds. Consider selling or mortgaging properties if possible." << endl;
+                return;
+            }
+            if (player->getMoney() == impCost) {
+                cout << "If you make this improvement purchase, you will have a cash balance of $0. Would you like to proceed?" << endl;
+                char response;
+                while (true) {
+                    cout << "Please enter Y for yes and N for no:" << endl;
+                    cin >> response;
+                    if (response == 'Y') {
+                        break;
+                    } 
+                    if (response == 'N') {
+                        cout << "You have decided to terminate this purchase. Good choice." << endl;
+                        return;
+                    }
+                }
+            }
+
+            impCost = -impCost;
+            player->setMoney(impCost);
+            a->buyImprovement();
+        }
+        if (action == "sell") {
+            //add money into their money
+            //check which monopoly block they are a part of and check if they have a monopoly
+            Academic *a = static_cast<Academic*>(property);
+            int impCost = a->getImprovementCost() / 2;
+            player->setMoney(impCost);
+            a->sellImprovement();
+        }
+   } catch (...) {
+        std::cerr << "Invalid action. Denied." <<endl;
+        return;
+   }
+}
 
 void Board::mortgage(Building *property, Player *player){
     // TO IMPLEMENT
@@ -405,6 +496,12 @@ void Board::mortgage(Building *property, Player *player){
     }
     //check bType
     //mortgageThis = static_cast to A R or G else 
+
+    if (ownable->getMortgageState() == true) {
+        string BuildName = ownable->getBName();
+        std::cerr << "Mortgage failed. " << BuildName << " is already mortgaged." << endl;
+        return;
+    }
 
     if (ownable->getBType() == 'A') {
 
