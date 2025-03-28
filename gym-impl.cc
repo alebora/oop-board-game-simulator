@@ -2,9 +2,14 @@ module gym;
 import ownable;
 import Building;
 import Player;
+import <vector>;
+import <algorithm>;
 import <string>;
+import <iomanip>;
 
 using namespace std;
+
+const int bottomLength = 7;
 
 Gym::Gym(string name, size_t blockPosition, Player *owner): Ownable{name, blockPosition, true, owner, 150} {}
 
@@ -21,6 +26,41 @@ int Gym::usageFee(int diceSum, int numGymOwner) {
     }
     return fee;
 }
+
+void Gym::printName() {
+    string name = getBName();
+    cout << left << setw(bottomLength) << name << "|";
+}
+
+void Gym::printLine(int lineNum){
+    if (lineNum == 1){
+        printName();
+    }
+    if (lineNum == 2){
+        emptyRow();
+    }
+    if (lineNum == 3){
+        emptyRow();
+    }
+    if (lineNum == 4){
+        printPlayer();
+    }
+    if (lineNum == 5){
+        printBottom();
+    }
+}
+
+// size_t Building::getBPos() const {
+//     return buildingPosition;
+// } // Building::getBPos
+
+// void Building::printBottom() {
+//     for (int i = 0; i < bottomLength; i++){
+//         cout << "_";
+//     }
+// } // Subject::getObserverNames
+
+
 
 /* getBType -> returns the type of building from either {A, R, G} */
 char Gym::getBType() const { return 'G'; }

@@ -1,8 +1,12 @@
 module Player;
 //import ownable;
+import <cstddef>;
+import <cstdint>;
 import <iostream>;
+import <sstream>;
 import <string>;
 import <vector>;
+import <ctime>;
 import PRNG;
 
 using namespace std;
@@ -18,9 +22,14 @@ void Player::move(size_t step, bool forward) {
     // *** implement
     if (forward){
         position += step;
-        if (position >= 40){
+        if (position > 40){
             position -= 40;
+            cout << "Pass origin, get $200!" << endl;
+            getMoney(200);
             // return true;        // reports to main that the player pass COLLECT OSAP
+        }
+        if (position == 40){
+            position = 0;
         }
     } else {
         if (position < step){
@@ -30,6 +39,85 @@ void Player::move(size_t step, bool forward) {
     }
     // return false            // reports to main that the player does not need to COLLECT OSAP
 } // Player::move
+
+void Player:: getMoney(int amount){
+    money += amount;
+    cout << "worth: " << money << endl;
+}
+
+void Player:: loseMoney(int amount){
+    money -= amount;
+    // if (amount < 0)  SELL OR MORTGAGE OR BANKRUPCY
+}
+
+void Player::loseCup(){
+    rimCups -= 1;
+}
+
+void Player::sentTo(size_t pos){
+    position = pos;
+    if (pos == 10){
+        inJail = 1;
+    }
+}
+
+size_t Player::rollDice(){
+    // PRNG prng(12345);  // Create PRNG with seed 12345
+    // PRNG prng;
+    PRNG prng(static_cast<std::uint32_t>(std::time(0)));  // Seed with current time
+    size_t dice1 = prng(6) + 1;
+    size_t dice2 = prng(6) + 1;
+    cout << "Dice1: " << dice1 << " Dice2: " << dice2 << endl;
+    return dice1 + dice2;
+}
+
+size_t Player::rollDouble(){
+    // PRNG prng(12345);  // Create PRNG with seed 12345
+    // PRNG prng;
+    PRNG prng(static_cast<std::uint32_t>(std::time(0)));  // Seed with current time
+    size_t dice1 = prng(6) + 1;
+    size_t dice2 = prng(6) + 1;
+    cout << "Dice1: " << dice1 << " Dice2: " << dice2 << endl;
+    if (dice1 == dice2){
+        return 2 * dice1;
+    } else {
+        return dice1 + dice2 + 12;
+    }
+}
+
+int Player:: ifInJail(){
+    return inJail;
+}
+
+int Player:: timesInJail(){
+    return jailTurns;
+}
+
+int Player::cups(){
+    return rimCups;
+}
+
+void Player::winCup(){
+    rimCups += 1;
+}
+
+void Player::setFree(){
+    inJail = 0;
+    jailTurns = 0;
+}
+
+void Player:: incJailTurn(){
+    jailTurns += 1;
+}
+
+void Player::broadcastPos(Building* bld){
+    bld->attachPlayer(acronym);
+}
+
+void Player::printPlayer() {
+    // *** implement
+    cout << acronym;
+} // Player::printPlayer
 
 // void Player::addOwnable(Ownable* o){
 //     properties.emplace_back(o);
@@ -106,7 +194,7 @@ void Player::setName(string new_name){
     name = new_name;
 }
 
-int Player::getPos(){
+size_t Player::getPos(){
     return position;
 }
 
@@ -172,11 +260,6 @@ void Player::setJailTurns(int n){
 
 int Player::getRimCups(){
     return rimCups;
-}
-
-// increase RimCup by 1, called when the player wins a cup in SLC or Needles Hall
-void Player::winCup(){
-    rimCups += 1;
 }
 
 void Player::setRimCups(int n){

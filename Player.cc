@@ -1,8 +1,11 @@
 export module Player;
 //import ownable;
+import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
 import <vector>;
+import PRNG;
+import Building;
 using namespace std;
 
 
@@ -24,7 +27,7 @@ export class Player{
         Player(string name, char acronym, int cups, int money, int pos, int jail, int turns);
         string getName();
         void setName(string name);
-        int getPos();
+        size_t getPos();
         void setPos(int pos);
         char getAcronym();
         void setAcronym(char c);
@@ -44,17 +47,29 @@ export class Player{
         void setRimCups(int n);
         bool getBankruptStatus();
         void setBankruptStatus(bool b);
-        void printPlayer();
         bool payBank();
         bool payPlayer();
         int total_worth();
         bool findMonopolies(string monopolyName);
-        void move(size_t step, bool forward);
-        void winCup();
         // void addOwnable(Ownable* o);
         // void removeOwnable(Ownable* o);
         // Ownable *getOwnable(int pos);
         // Ownable *getOwnable(string name);
+        void printPlayer();
+        void move(size_t step, bool forward);
+        void getMoney(int amount);
+        void loseMoney(int amount);
+        void loseCup();
+        void sentTo(size_t pos);
+        int ifInJail();
+        int timesInJail();
+        int cups();
+        size_t rollDice();
+        size_t rollDouble();
+        void setFree();
+        void incJailTurn();
+        void winCup();
+        void broadcastPos(Building* bld);
         
         //void printAssests();
 };

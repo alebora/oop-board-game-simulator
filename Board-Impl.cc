@@ -62,8 +62,221 @@ unique_ptr<Player> Board::getPlayer(string s){
 //     return vec_players_selected.size();
 // }
 
+void Board::stateOfBoardChange(){
+    for (size_t i = 0; i < 40; i++){
+        vec_buildings[i].get()->clearPlayer();
+    }
+    for (size_t i = 0; i < vec_players_selected.size(); i++){
+        vec_players_selected[i].get()->broadcastPos(vec_buildings[vec_players_selected[i].get()->getPos()].get());
+    }
+}
+
 void Board::printBoard(){
-    //ask Judy what she needs 
+    for (int i = 0; i < 89; i++){
+        cout << "_";
+    }
+    cout << endl;
+    for (int k = 1; k <= 5; k++){
+        cout << "|";
+        for (size_t i = 20; i <= 30; i++){
+            vec_buildings[i]->printLine(k);
+        }
+        cout << endl;
+    }
+    for (int i = 19; i >= 17; i--){
+        for (int k = 1; k <= 5; k++){
+            cout << "|";
+            vec_buildings[i]->printLine(k);
+            for (int i = 0; i <= 70; i++){
+                cout << " ";
+            }
+            cout << "|";
+            vec_buildings[50 - i]->printLine(k);
+            cout << endl;
+        }
+    }
+    for (int k = 1; k <= 3; k++){
+        cout << "|";
+        vec_buildings[16]->printLine(k);
+        for (int i = 0; i <= 70; i++){
+            cout << " ";
+        }
+        cout << "|";
+        vec_buildings[34]->printLine(k);
+        cout << endl;
+    }
+
+    cout << "|";
+    vec_buildings[16]->printLine(4);
+    for (int i = 0; i <= 12; i++){
+        cout << " ";
+    }
+    for (int i = 0; i <= 44; i++){
+        cout << "_";
+    }
+    for (int i = 0; i <= 12; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[34]->printLine(4);
+    cout <<  endl;
+
+    cout << "|";
+    vec_buildings[16]->printLine(5);
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    for (int i = 0; i <= 44; i++){
+        cout << " ";
+    }
+    cout << "|";
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[34]->printLine(5);
+    cout <<  endl;
+
+    cout << "|";
+    vec_buildings[15]->printLine(1);
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "| ";
+    cout << "#   #  ##  #####  ###  ###   ###  #   #   #";
+    cout << " |";
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[35]->printLine(1);
+    cout <<  endl;
+
+    cout << "|";
+    vec_buildings[15]->printLine(2);
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "| ";
+    cout << "#   # #  #   #   #   # #  # #   # #   #   #";
+    cout << " |";
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[35]->printLine(2);
+    cout <<  endl;
+
+    cout << "|";
+    vec_buildings[15]->printLine(3);
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "| ";
+    cout << "# # # ####   #   #   # ###  #   # #    # # ";
+    cout << " |";
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[35]->printLine(3);
+    cout <<  endl;
+
+    cout << "|";
+    vec_buildings[15]->printLine(4);
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "| ";
+    cout << "# # # #  #   #   #   # #    #   # #     #  ";
+    cout << " |";
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[35]->printLine(4);
+    cout <<  endl;
+
+    cout << "|";
+    vec_buildings[15]->printLine(5);
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "| ";
+    cout << "##### #  #   #    ###  #     ###  ## #  #  ";
+    cout << " |";
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[35]->printLine(5);
+    cout <<  endl;
+
+    cout << "|";
+    vec_buildings[14]->printLine(1);
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    for (int i = 0; i <= 44; i++){
+        cout << "_";
+    }
+    cout << "|";
+    for (int i = 0; i <= 11; i++){
+        cout << " ";
+    }
+    cout << "|";
+    vec_buildings[36]->printLine(1);
+    cout <<  endl;
+
+    for (int k = 2; k <= 5; k++){
+        cout << "|";
+        vec_buildings[14]->printLine(k);
+        for (int i = 0; i <= 70; i++){
+            cout << " ";
+        }
+        cout << "|";
+        vec_buildings[36]->printLine(k);
+        cout << endl;
+    }
+    for (int i = 13; i >= 12; i--){
+        for (int k = 1; k <= 5; k++){
+            cout << "|";
+            vec_buildings[i]->printLine(k);
+            for (int i = 0; i <= 70; i++){
+                cout << " ";
+            }
+            cout << "|";
+            vec_buildings[50 - i]->printLine(k);
+            cout << endl;
+        }
+    }
+    for (int k = 1; k <= 4; k++){
+        cout << "|";
+        vec_buildings[11]->printLine(k);
+        for (int i = 0; i <= 70; i++){
+            cout << " ";
+        }
+        cout << "|";
+        vec_buildings[39]->printLine(k);
+        cout << endl;
+    }
+    cout << "|";
+    vec_buildings[11]->printLine(5);
+    for (int i = 0; i <= 70; i++){
+        cout << "_";
+    }
+    cout << "|";
+    vec_buildings[39]->printLine(5);
+    cout <<  endl;
+    for (int k = 1; k <= 5; k++){
+        cout << "|";
+        for (size_t i = 11; i >= 1; i--){
+            vec_buildings[i - 1]->printLine(k);
+        }
+        cout << endl;
+    }
 }
 
 // void Board::stateOfBoardChange(){
@@ -374,6 +587,7 @@ void Board::academicImprovements(Building *property, string action, Player *play
         player->setMoney(impCost);
         a->sellImprovement();
     }
+}
 
 void Board::mortgage(Building *property, Player *player){
     // TO IMPLEMENT

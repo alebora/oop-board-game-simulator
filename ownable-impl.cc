@@ -1,9 +1,16 @@
 /*Implementation File for ownable properties*/
 module ownable;
+import <vector>;
+import <algorithm>;
+import <string>;
+import <vector>;
+import <iostream>;
 import Player;
 import Building;
 
 using namespace std;
+
+const int bottomLength = 7;
 
 Ownable::Ownable(string name, size_t blockPosition, bool isOwnable, Player *owner, int propertyCost): Building{name, blockPosition, isOwnable}, owner{owner}, propertyCost{propertyCost}, isMortgaged{false} {}
 
@@ -35,6 +42,14 @@ char Ownable::getBType() const {
 
 } //should this be pure virtual or something bc building cost depends on which building it is
 */
+
+void Ownable::printName(){
+    string name = getBName();
+    cout << name;
+}
+
+void Ownable::printLine(int lineNum){
+}
 
 Ownable::~Ownable() {}
 

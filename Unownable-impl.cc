@@ -1,76 +1,115 @@
 module Unownable;
-// #include "observer.h"
-import <vector>;
-// import <algorithm>;
-import <string>;
+// #include "observer.h
 import <iostream>;
+import <vector>;
+import <algorithm>;
+import <string>;
+import <iomanip>;
+import <memory>;
 using namespace std;
-// import <iomanip>;
 
-// const int bottomLength = 7;
+const int bottomLength = 7;
 
-Unownable::Unownable(string Bname, int pos): Building{Bname, pos, false} {}
-
-// void Unownable::executeUnownable(int pos, Player &p){
-//     if (pos == 10){ //DCTimsLine
-//         DCTimsLine();
-//     } else if (pos == 30){ //GoToTims 
-//         GoToTims();
-//     } else if (pos == 38){ //Coop Fee 
-//         CoopFee();
-//     } else if (pos == 4){ //Tuition
-//         Tuition(p);
-//     } else if (pos == 0){ //Collect OSAP 
-//         cout << "You landed on COLLECT OSAP, you gain $200!" << endl;
-//     } else if (pos == 20){//Goose Nest 
-//         cout << "You landed on GOOSE NESTING. Look out, incoming Geese!!" << endl; 
-//     }else { //SLC or Needles hall
-//         //triggerEvent(p);
-//     }
-// }
-
-// void Unownable::Tuition(){
-
-// }
-// void Unownable::CoopFee(){
-
-// }
-// void Unownable::DCTimsLine(Player &p){
-//     //very FIRST time they land in jail, set all statuses to jail etc.
-//     //if actually in jail or just landed on this square 
-//     cout << "You are, unfortunently, stuck in the famous DC Tims Line." << endl;
-//     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailStatusNum(1);
-//     cout << "This is your first turn in line (jail)." << endl;
-//     boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setJailTurns(1);
-// }
-// void Unownable::GoToTims(){
-//     //jail (if not 0 means in jail, the number is also the number of turns they were in jail, so if 4 then NEEDS to pay 50 or use card)
-//     //change pos to 10 
-// }
-
+Unownable::Unownable(std::string BName, size_t pos): Building{BName, pos, false} {
+    // ownable = false;
+}
 
 void Unownable::printLongName(int lineNum) {
-    string name = this->getBName();
+    std::string name = this->getBName();
     int length = name.length();
     if (length <= 7){
         if (lineNum == 1){
-            // cout << left << setw(7) << name;
+            std::cout << std::left << std::setw(bottomLength) << name << "|";
         } else {
-            // cout << left << setw(7) << "";
+            emptyRow();
         }
     } else {
         size_t lastSpace = name.rfind(' ');
-        string first = name.substr(0, lastSpace);
-        string second = name.substr(lastSpace + 1);
+        std::string first = name.substr(0, lastSpace);
+        std::string second = name.substr(lastSpace + 1);
         if (lineNum == 1){
-            cout << first;
+            std::cout << left << setw(bottomLength) << first << "|";
         } else {
-            cout << second;
+            std::cout << left << setw(bottomLength) << second << "|";
         }
     }
 }
 
-// 
+void Unownable::printLine(int lineNum){
+    if (lineNum == 1){
+        printLongName(1);
+    }
+    if (lineNum == 2){
+        printLongName(2);
+    }
+    if (lineNum == 3){
+        emptyRow();
+    }
+    if (lineNum == 4){
+        printPlayer();
+    }
+    if (lineNum == 5){
+        printBottom();
+    }
+}
+
+void Unownable::printName(){
+    cout << "";
+}
+
+void Unownable::triggerEvent(Player& player){
+    string BName = getBName();
+    if (BName == "SLC"){
+        std::unique_ptr event = EventFactory::createEvent(true);
+        event->execute(player);
+    } 
+    if (BName == "NEEDLES HALL"){
+        std::unique_ptr event = EventFactory::createEvent(false);
+        event->execute(player);
+    } 
+    if (BName == "COLLECT OSAP"){
+        cout << "Collect $200!" << endl;
+        player.getMoney(200);
+    } 
+    if (BName == "DC Tims Line"){
+        std::unique_ptr event = std::make_unique<OnDcTimsLine>();
+        event->execute(player);
+    } 
+    if (BName == "GO TO TIMS"){
+        cout << "Go to DC Tims Line!" << endl;
+        player.sentTo(10);
+    }
+    if (BName == "Goose Nesting"){
+        cout << "Oops! You are attacked by a flock of nesting geese!" << endl;
+    }
+    if (BName == "COOP FEE"){
+        cout << "Pay $150 Coop fee!" << endl;
+        player.getMoney(-150);
+    }
+    if (BName == "TUITION"){
+        cout << "Pay tuition: $300(1) or 1/10 total worth(2)?" << endl;
+        char response;
+        while (true){
+            cin >> response;
+            if (response == '1'){
+                player.getMoney(-300);
+                break;
+            }
+            if (response == '2'){
+
+            }
+            // implement player.totalWorth();
+        }
+    }
+}
+
+// void Unownable::triggerEvent(Player& player){
+//     if (this->getBName() == "Collect OSAP"){
+//         std::unique_ptr event = std::make_unique<GoToCollectOSAP>();
+//         event->execute(player);
+//     }
+    
+// }
 
 // size_t Building::getBPos() const {
 //     return buildingPosition;

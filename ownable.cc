@@ -2,9 +2,13 @@
 //OWNABLE is an Abstract Base Class
 
 export module ownable;
+import <cstddef>; // defines size_t i.e. an unsigned int
+import <iostream>;
+import <string>;
+import <vector>;
+import <string>;
 import Building;
 import Player;
-import <string>;
 
 using namespace std;
 
@@ -26,5 +30,7 @@ export class Ownable: public Building {
         void setMortgageState( bool mortgage );
         
         virtual char getBType() const = 0; //DOUBLE CHECK
+        virtual void printName() override;
+        virtual void printLine(int lineNum) override;
         
 };

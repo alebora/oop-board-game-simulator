@@ -1,9 +1,11 @@
 export module academic;
 import ownable;
 import Player;
+import <cstddef>; // defines size_t i.e. an unsigned int
+import <iostream>;
 import <string>;
-import <memory>;
 import <vector>;
+import <memory>;
 
 using namespace std;
 
@@ -29,4 +31,9 @@ export class Academic: public Ownable {
         int getImprovementCost() const;
         char getBType() const override;
         string getMonopolyBlock() const;
+        
+        virtual void printName() override;
+        void printImpr();
+        // void tuitionWithImpr(int p0, int p1, int p2, int p3, int p4, int p5);
+        virtual void printLine(int lineNum) override;
 };
