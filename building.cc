@@ -14,5 +14,9 @@ export class Building {
         string getBName() const; //should this be pure virtual?
         size_t getBPos() const; //should this be pure virtual?
         bool getOwnableStatus() const;
-        virtual ~Building() = 0; //so it is an ABC
+        void setOwnable(bool b);
+        virtual void setImprovments(size_t numImprovs);
+        virtual int getLevel();
+        //virtual void getOwner(size_t numImprovs);
+        //virtual ~Building() = 0; //so it is an ABC
 };
