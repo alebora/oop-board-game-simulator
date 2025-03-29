@@ -5,21 +5,27 @@ import <iostream>;
 import <string>;
 import <vector>;
 import <memory>;
+import <ctime>;
 import Event;
 import PRNG;
 import MoveForward;
 import MoveBackward;
 import GainMoney;
 import LoseMoney;
-//import CaughtByTims;
+import CaughtByTims;
 import GoToCollectOSAP;
 using namespace std;
+// #include "subject.h"
+// #include "observer.h"
+// #include "info.h"
 
 
 export class EventFactory {
     public:
         static std::unique_ptr<Event> createEvent(bool isSLC){
-            PRNG prng(12345);  // Initialize PRNG with a seed
+            // PRNG prng(12345);  // Initialize PRNG with a seed
+            // PRNG prng;
+            PRNG prng(static_cast<std::uint32_t>(std::time(0)));  // Seed with current time
             std::uint32_t prob = prng(72) + 1;  // Generate a random number in [1,72]
             if (isSLC){
                 if (prob <= 9){
@@ -35,7 +41,7 @@ export class EventFactory {
                 } else if (prob <= 66){
                     return std::make_unique<MoveForward>(3);
                 } else if (prob <= 69){
-                    // return std::make_unique<CaughtByTims>();
+                    return std::make_unique<CaughtByTims>();
                 } else {
                     return std::make_unique<GoToCollectOSAP>();
                 }

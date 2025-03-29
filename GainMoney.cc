@@ -6,6 +6,9 @@ import <vector>;
 import Event;
 import Player;
 import PRNG;
+// #include "observer.h"
+// #include "info.h"
+
 
 
 export class GainMoney : public Event {

@@ -1,14 +1,23 @@
 export module Unownable;
-import Building;
-import Player;
+import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
-using namespace std;
+import <memory>;
+import Building;
+import Player;
+import Event;
+import OnDcTimsLine;
+import EventFactory;
 
 export class Unownable : public Building {
 
   public:
-    Unownable(string Bname, int pos);
+    Unownable(std::string BName, size_t pos);
+    void printLongName(int lineNum);
+    void triggerEvent(Player& player);
+    virtual void printName() override;
+    virtual void printLine(int lineNum) override;
+    // Unownable(string Bname, int pos);
     // void executeUnownable(int pos, Player &p);
     // void Tuition();
     // void CoopFee();
@@ -17,7 +26,7 @@ export class Unownable : public Building {
     //virtual void triggerEvent(Player& player) = 0;
     // void triggerEvent(Player& player) //I think should not be virtual
     //methods not in UML yet: 
-    void printLongName(int lineNum); //NOT IN UML 
+    // void printLongName(int lineNum); //NOT IN UML 
     // void setLiving();                   // Marks cell as alive. Called by Grid::turnOn.
     // void reset();                       // Resets neighbour count to 0.
 

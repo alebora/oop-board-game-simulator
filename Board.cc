@@ -32,9 +32,13 @@ export class Board: public Subject {
         void trade(string name, string giveMoney, string receiveMoney, Player *player);
         void academicImprovements(Building *property, string action, Player *player);
         void mortgage(Building *property, Player *player);
-        void bankrupt(Player *player, int Owed, Player *toWho);
+        //void bankrupt(Player *player, int Owed, Player *toWho);
+        bool bankrupt(Player *player, int Owed, Player *toWho);
         void auction(Building *building);
         void pay(Player *whoOwes, int howMuchOwed, Player *toWhoOwed);
+        Player* getOwner(Building *b);
+        void setOwner(Building *b, Player *p); 
+        void removeOwner(Building *b);
 };
 
 
