@@ -301,7 +301,7 @@ int main(int argc, char* argv[]){
                 // // need to check if players pos is on owneable or unowneable space 
                 int pos = boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos();
                 //Player *currentPlayerPtr = boardMain.vec_players_selected[boardMain.getCurrPlayer()];  
-                if (boardMain.vec_buildings[pos]->getOwnableStatus()){ //means is an owneable building 
+                if (boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()]->getOwnableStatus()){ //means is an owneable building 
                     //check owenrship 
                     if (boardMain.getOwner(vec_buildings[pos])){ //has an owner
                         if(boardMain.getOwner(vec_buildings[pos])->getName() == boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName()){ //owner by this player 
@@ -341,7 +341,7 @@ int main(int argc, char* argv[]){
                     if (pos == 2 || pos == 17 || pos == 33){ //means landed on SLC
                         bool slc = true;
                     }
-                    static_cast<Unownable*>(boardMain.vec_buildings[pos].get())->triggerEvent(boradMain.vec_players_selected[boardMain.getCurrPlayer()])
+                    static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(boradMain.vec_players_selected[boardMain.getCurrPlayer()])
                     if (slc){
                         boardMain.stateOfBoardChange();
                         boardMain.printBoard();
