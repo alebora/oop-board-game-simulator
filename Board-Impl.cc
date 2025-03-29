@@ -36,32 +36,6 @@ unique_ptr<Player> Board::getPlayer(string s){
 //     //clear all heap allocated ctors in addBuilding
 // }
 
-// void Board::addBuilding(string Bname, string owner, int improvements, int pos){ // !! Need to see how ctor is implemented for academic, gym, and res
-//     // !! Building ctor !! ?? can be any of 4 types:
-//     // !! MAKE EACH ONE HEAP ALLOCATED 
-//     Player *p;
-//     if (Bname != "BANK") {
-//         p = getPlayer(Bname);
-//     } else {
-//         p = nullptr;
-//     }
-//     if (pos == 12 || pos == 28){ //gym
-//         Gym *b(Bname, pos, p); 
-//     }else if (pos == 5 || pos == 15 || pos == 25 || pos == 35){ //res
-//         Res *b(Bname, pos, p); 
-//     } else if (pos == 0 || pos == 2 || pos == 4 || pos == 7 || pos == 10 || pos == 17 || pos == 20 || pos == 22 || pos == 30 || pos == 33 || pos == 36 || pos == 38){ //unownable
-//         Unownable *b(Bname, pos);
-//     } else { 
-//         // Academic *b(Bname, pos, p, improvements, string monopolyBlock, vector<size_t> tuition, int improvementCost, bool hasMonopoly);
-//         // need to find the monopolyBlock, fill in all the tuitions manually :(, and improvement cost, and the hasmonopoly boolean.
-//     }
-//     vec_buildings.emplace_back(b);
-// }
-
-// int Board::getSize(){
-//     return vec_players_selected.size();
-// }
-
 void Board::stateOfBoardChange(){
     for (size_t i = 0; i < 40; i++){
         vec_buildings[i].get()->clearPlayer();
@@ -307,6 +281,24 @@ void Board::setRemainingNumRimCups(int n){
     remainingRimCups = n; 
 }
 
+Player* Board::getOwner(Building *b){ //if there is no owner then will return nullptr
+    for (int i = 0; i < vec_players_selected.size(); ++i){
+        if (vec_players_selected[i]->properties.size() != 0){
+            for (int j = 0; j < vec_players_selected[i]->properties.size(); ++j){
+                if (b->getBPos() == vec_players_selected[i]->properties[j]->getBPos()){
+                    return vec_players_selected[i].get();
+                }
+            }
+        }
+    }
+    return nullptr;
+}
+
+// void Board::setOwner(Building *b, Player *p);
+// void Board::removerOwner(Building *b);
+
+
+
 int Board::moneyOwed(Building *building, int diceSum){
     // TO IMPLEMENT
     Ownable* ownableBuilding = static_cast<Ownable*>(building); //.get()?
@@ -329,7 +321,7 @@ int Board::moneyOwed(Building *building, int diceSum){
         //2. from academic building -> get getMonopolyBlock
         //2. from player, findMonopolies() => T/F
 
-        Player *owner = academic->getOwner();
+        Player *owner = getOwner(academic);
 
         if (owner == nullptr) {
             std::cerr << "Error. There is no owner for this building." <<endl;
@@ -350,7 +342,7 @@ int Board::moneyOwed(Building *building, int diceSum){
 
     } else if (bType = 'R') {
         Residence *residence = static_cast<Residence*>(ownableBuilding);
-        Player *owner = residence->getOwner();
+        Player *owner = getOwner(residence);
 
         if (owner == nullptr) {
             std::cerr << "Error. There is no owner for this building." <<endl;
@@ -363,7 +355,7 @@ int Board::moneyOwed(Building *building, int diceSum){
     } else if (bType == 'G') {
 
         Gym *gym = static_cast<Gym*>(ownableBuilding);
-        Player* owner = gym->getOwner();
+        Player* owner = getOwner(gym);
 
         if (owner == nullptr) {
             std::cerr << "Error. There is no owner for this building." <<endl;
@@ -460,7 +452,7 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
             cout << "Trade rejected. You do not have enough money to make this trade" <<endl;
             return;
         }
-        Player *tmpPlayer = receive->getOwner();
+        Player *tmpPlayer = getOwner(receive);
         if(tmpPlayer == nullptr) {
             cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
             return;
@@ -473,8 +465,13 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
             return;
         }
 
-        receive->removeOwner();
-        receive->setOwner(player);
+
+        //!!!receive->removeOwner();
+        //!!!receive->setOwner(player); //setting player as owner of receive
+        //check if this building was owned (is) 
+        //remove this building from the prev owner vec of owned buildings 
+        //add this building to player's vec of buildings 
+
         reqFrom->setMoney(giveM);
         giveM = -giveM;
         player->setMoney(giveM);
@@ -485,7 +482,7 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
 
     //Building Building
     if (giveBuilding && receiveBuilding) {
-        Player *tmpPlayer1 = receive->getOwner();
+        Player *tmpPlayer1 = getOwner(receive);
 
         if(tmpPlayer1) {
             cout << "Trade rejected. " << name << "does not own " << receiveMoney <<endl;
@@ -501,7 +498,7 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
 
         string giveName = player->getName();
 
-        Player *tmpPlayer = give->getOwner();
+        Player *tmpPlayer = getOwner(give);
         //if no owner
         if(tmpPlayer == nullptr) {
             cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
@@ -517,11 +514,11 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
         }
 
 
-        receive->removeOwner();
-        receive->setOwner(player);
+        // !!!receive->removeOwner();
+        // !!!receive->setOwner(player);
 
-        give->removeOwner();
-        give->setOwner(reqFrom);
+        // !!!give->removeOwner();
+        // !!!give->setOwner(reqFrom);
 
         cout << "Trade succesful! " <<endl;
         return;
@@ -538,7 +535,7 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
         }
 
         string giveName = player->getName();
-        Player *tmpPlayer = give->getOwner();
+        Player *tmpPlayer = getOwner(give);
 
         if(tmpPlayer == nullptr) {
             cout << "Trade rejected. " << giveName << "does not own " << receiveMoney <<endl;
@@ -552,8 +549,8 @@ void Board::trade(string name, string giveMoney, string receiveMoney, Player *pl
             return;
         }
 
-        give->removeOwner();
-        give->setOwner(reqFrom);
+        // !!!give->removeOwner();
+        // !!!give->setOwner(reqFrom);
 
         player->setMoney(receiveM);
         receiveM = -receiveM;
@@ -604,7 +601,7 @@ void Board::mortgage(Building *property, Player *player){
     Ownable *ownable = static_cast<Ownable*>(property);
     //Academic *ownable = static_cast<Ownable*>(property);
     //above can only access ownable type
-    Player *tmp = ownable->getOwner();
+    Player *tmp = getOwner(ownable);
 
     
     if (tmp == nullptr) {
@@ -724,27 +721,17 @@ void Board::pay(Player *whoOwes, int howMuchOwed, Player *toWhoOwed){
 }
 
 
-//******
-//FROM MAIN
-void Board::addBuildingINIT(string Bname, string block, Player *owner, int improvements, int pos, int pur, int imp, size_t z, size_t o, size_t t, size_t thr, size_t f, size_t fiv){ //DELETE AFTER TEST 
-    // !! MAKE EACH ONE HEAP ALLOCATED 
-    //Player *p; 
-    // if (Bname != "BANK") {
-    //     p = getPlayer(Bname); 
-    // } else {
-         //p = nullptr;
-    // }
+void Board::addBuildingINIT(string Bname, string block, int improvements, int pos, int pur, int imp, size_t z, size_t o, size_t t, size_t thr, size_t f, size_t fiv){ 
     unique_ptr<Building> b;
     if (pos == 12 || pos == 28){ //gym
-        b = make_unique<Gym>(Bname, pos, nullptr);
+        b = make_unique<Gym>(Bname, pos);
     } else if (pos == 5 || pos == 15 || pos == 25 || pos == 35){ //res
-        b = make_unique<Residence>(Bname, pos, nullptr);
+        b = make_unique<Residence>(Bname, pos);
     } else if (pos != 0 || pos == 2 || pos == 4 || pos == 7 || pos == 10 || pos == 17 || pos == 20 || pos == 22 || pos == 30 || pos == 33 || pos == 36 || pos == 38){ //unownable
         b = make_unique<Unownable>(Bname, pos);
     } else { 
         unique_ptr<vector<size_t>> v = make_unique<vector<size_t>>(initializer_list<size_t>{z, o, t, thr, f, fiv});
-//(string name, size_t blockPosition, Player *owner, size_t improvementLevel, string monopolyBlock, unique_ptr<vector<size_t>> tuition, int purchaseCost, int improvementCost, bool hasMonopoly):
-        b = make_unique<Academic>(Bname, pos, nullptr, 0, block, move(v), pur, imp, false);
+        b = make_unique<Academic>(Bname, pos, 0, block, move(v), pur, imp, false);
     }
     vec_buildings.emplace_back(move(b)); //no access to board 
 }

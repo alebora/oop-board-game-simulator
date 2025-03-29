@@ -1,11 +1,11 @@
 export module Player;
-//import ownable;
+import Building;
+import ownable;
+import PRNG;
 import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
 import <vector>;
-import PRNG;
-import Building;
 using namespace std;
 
 
@@ -14,7 +14,6 @@ export class Player{
     string name;
     int money;
     char acronym;
-    //vector<Ownable*> properties;
     int inJail; //jail (if not 0 means in jail, the number is also the number of turns they were in jail, so if 4 then NEEDS to pay 50 or use card)
     int jailTurns;
     bool isBankrupt;
@@ -23,7 +22,9 @@ export class Player{
     int diceSum;
     int rimCups;
     public: 
+        vector<Building*> properties;
         vector<string> monopolies;
+
         Player(string name, char acronym, int cups, int money, int pos, int jail, int turns);
         string getName();
         void setName(string name);
@@ -47,16 +48,18 @@ export class Player{
         void setRimCups(int n);
         bool getBankruptStatus();
         void setBankruptStatus(bool b);
+        void printPlayer();
         bool payBank();
         bool payPlayer();
         int total_worth();
         bool findMonopolies(string monopolyName);
-        // void addOwnable(Ownable* o);
+        void move(size_t step, bool forward);
+        void winCup();
+        void addOwnable(Ownable* o);
         // void removeOwnable(Ownable* o);
         // Ownable *getOwnable(int pos);
         // Ownable *getOwnable(string name);
-        void printPlayer();
-        void move(size_t step, bool forward);
+
         void getMoney(int amount);
         void loseMoney(int amount);
         void loseCup();
@@ -68,7 +71,7 @@ export class Player{
         size_t rollDouble();
         void setFree();
         void incJailTurn();
-        void winCup();
+
         void broadcastPos(Building* bld);
         
         //void printAssests();

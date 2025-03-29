@@ -1,17 +1,17 @@
 module gym;
 import ownable;
 import Building;
-import Player;
 import <vector>;
 import <algorithm>;
+//import <iomanip>;
 import <string>;
-import <iomanip>;
+
 
 using namespace std;
 
 const int bottomLength = 7;
 
-Gym::Gym(string name, size_t blockPosition, Player *owner): Ownable{name, blockPosition, true, owner, 150} {}
+Gym::Gym(string name, size_t blockPosition): Ownable{name, blockPosition, true, 150} {}
 
 
 /* diceSum -> is the sum of the two dice rolled */
@@ -26,10 +26,9 @@ int Gym::usageFee(int diceSum, int numGymOwner) {
     }
     return fee;
 }
-
 void Gym::printName() {
     string name = getBName();
-    cout << left << setw(bottomLength) << name << "|";
+    //cout << left << setw(bottomLength) << name << "|";
 }
 
 void Gym::printLine(int lineNum){
@@ -59,6 +58,7 @@ void Gym::printLine(int lineNum){
 //         cout << "_";
 //     }
 // } // Subject::getObserverNames
+
 
 
 

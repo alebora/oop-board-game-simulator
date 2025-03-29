@@ -23,7 +23,7 @@ export class Board: public Subject {
         int getNumPlayers();
         unique_ptr<Building> getBuilding(string Bname);
         void addPlayer(unique_ptr<Player> player);
-        void addBuildingINIT(string Bname, string block, Player *owner, int improvements, int pos, int pur, int imp, size_t z, size_t o, size_t t, size_t thr, size_t f, size_t fiv);
+        void addBuildingINIT(string Bname, string block, int improvements, int pos, int pur, int imp, size_t z, size_t o, size_t t, size_t thr, size_t f, size_t fiv);
         int getCurrPlayer();
         void setCurrPlayer(int n);
         int getRemainingNumRimCups();
@@ -32,9 +32,13 @@ export class Board: public Subject {
         void trade(string name, string giveMoney, string receiveMoney, Player *player);
         void academicImprovements(Building *property, string action, Player *player);
         void mortgage(Building *property, Player *player);
+        void unmortgage(Building *property, Player *player);
         void bankrupt(Player *player, int Owed, Player *toWho);
         void auction(Building *building);
         void pay(Player *whoOwes, int howMuchOwed, Player *toWhoOwed);
+        Player* getOwner(Building *b);
+        //void Board::setOwner(Building *b, Player *p); 
+        // void Board::removerOwner(Building *b);
 };
 
 

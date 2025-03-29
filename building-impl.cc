@@ -1,9 +1,9 @@
 module Building;
-import <iostream>;
 import <string>;
+import <iostream>;
 import <vector>;
 import <algorithm>;
-import <string>;
+
 
 using namespace std;
 
@@ -73,6 +73,7 @@ void Building::clearPlayer(){
 bool Building::ifOwnable(){
     return isOwnable;
 }
+
 
 
 //Building::~Building() {}

@@ -3,13 +3,13 @@ import ownable;
 import <vector>;
 import <algorithm>;
 import <string>;
-import <iomanip>;
+//import <iomanip>;
 
 using namespace std;
 
 const int bottomLength = 7;
 
-Residence::Residence(string name, size_t blockPosition, Player *owner): Ownable{name, blockPosition, true, owner, 200} {}
+Residence::Residence(string name, size_t blockPosition): Ownable{name, blockPosition, true, 200} {}
 
 
 int Residence::calcResCost(int ownedNum) {
@@ -30,7 +30,7 @@ int Residence::calcResCost(int ownedNum) {
 
 void Residence::printName() {
     string name = getBName();
-    cout << left << setw(bottomLength) << name << "|";
+    //cout << left << setw(bottomLength) << name << "|";
 }
 
 void Residence::printLine(int lineNum){
@@ -50,6 +50,7 @@ void Residence::printLine(int lineNum){
         printBottom();
     }
 }
+
 
 char Residence::getBType() const { return 'R'; }
 

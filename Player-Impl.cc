@@ -1,5 +1,5 @@
 module Player;
-//import ownable;
+import ownable;
 import <cstddef>;
 import <cstdint>;
 import <iostream>;
@@ -39,6 +39,31 @@ void Player::move(size_t step, bool forward) {
     }
     // return false            // reports to main that the player does not need to COLLECT OSAP
 } // Player::move
+
+
+void Player::addOwnable(Ownable* o){
+    properties.emplace_back(o);
+    // int groupSize = o->BlockGroupMembers.size(); // CHECK BlockGroupMembers HOW TO WORK AROUND
+    // int ct = 0;
+    // for (int i = 0; i < properties.size(); ++i){
+    //     for (int j = 0; j < o->BlockGroupMembers[j]; ++j){
+    //         if (properties[i] == o->BlockGroupMembers[j]){
+    //             ++ct;
+    //         }
+    //     }
+    //     if (ct == groupSize){
+    //         monopolies.emplace_back(o->monopolyBlock); //adds the name of the monopoly group to Players monopolies
+    //         break;
+    //     }
+    // }
+    if (o->getBType() == 'G'){
+        setNumGymOwned(1);
+    }
+    if (o->getBType() == 'R'){
+        setNumResOwned(1);
+    }
+     //ALSO MAKE THE OTHER NEIGHBOUR BUILDINGS BOOL TO TRUE FOR MONOPOLY
+}
 
 void Player:: getMoney(int amount){
     money += amount;
@@ -136,6 +161,7 @@ void Player::printPlayer() {
 //     }
 // }
 
+
 bool Player::findMonopolies(string monopolyName){
     for (int i = 0; i < monopolies.size(); ++i){
         if (monopolies[i] == monopolyName){
@@ -231,7 +257,7 @@ int Player::getNumGymOwned(){
 }
 
 void Player::setNumGymOwned(int n){
-    numGym = n;
+    numGym += n;
 }
 
 int Player::getNumResOwned(){
@@ -239,7 +265,7 @@ int Player::getNumResOwned(){
 }
 
 void Player::setNumResOwned(int n){
-    numRes = n;
+    numRes += n;
 }
 
 int Player::getJailStatusNum(){
@@ -261,6 +287,7 @@ void Player::setJailTurns(int n){
 int Player::getRimCups(){
     return rimCups;
 }
+
 
 void Player::setRimCups(int n){
     rimCups += n;

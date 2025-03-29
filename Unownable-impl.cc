@@ -1,12 +1,12 @@
 module Unownable;
-// #include "observer.h
 import <iostream>;
 import <vector>;
 import <algorithm>;
 import <string>;
-import <iomanip>;
+//import <iomanip>;
 import <memory>;
 using namespace std;
+// import <iomanip>;
 
 const int bottomLength = 7;
 
@@ -14,12 +14,13 @@ Unownable::Unownable(std::string BName, size_t pos): Building{BName, pos, false}
     // ownable = false;
 }
 
+
 void Unownable::printLongName(int lineNum) {
     std::string name = this->getBName();
     int length = name.length();
     if (length <= 7){
         if (lineNum == 1){
-            std::cout << std::left << std::setw(bottomLength) << name << "|";
+            //std::cout << std::left << std::setw(bottomLength) << name << "|";
         } else {
             emptyRow();
         }
@@ -28,9 +29,9 @@ void Unownable::printLongName(int lineNum) {
         std::string first = name.substr(0, lastSpace);
         std::string second = name.substr(lastSpace + 1);
         if (lineNum == 1){
-            std::cout << left << setw(bottomLength) << first << "|";
+            //std::cout << left << setw(bottomLength) << first << "|";
         } else {
-            std::cout << left << setw(bottomLength) << second << "|";
+            //std::cout << left << setw(bottomLength) << second << "|";
         }
     }
 }
@@ -110,6 +111,17 @@ void Unownable::triggerEvent(Player& player){
 //     }
     
 // }
+
+// size_t Building::getBPos() const {
+//     return buildingPosition;
+// } // Building::getBPos
+
+// void Building::printBottom() {
+//     for (int i = 0; i < bottomLength; i++){
+//         cout << "_";
+//     }
+// } // Subject::getObserverNames
+
 
 // size_t Building::getBPos() const {
 //     return buildingPosition;
