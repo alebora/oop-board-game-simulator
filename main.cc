@@ -284,7 +284,7 @@ int main(int argc, char* argv[]){
                     }
                 } else {
                     //in jail 
-                    static_cast<Unownable*>(boardMain.vec_buildings[pos].get())->triggerEvent(boradMain.vec_players_selected[boardMain.getCurrPlayer()]);
+                    static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(boardMain.vec_players_selected[boardMain.getCurrPlayer()]);
                 }
                 //for testing:
                 cout << "your dice sum is: " << sum_of_roll << endl; 
@@ -303,33 +303,33 @@ int main(int argc, char* argv[]){
                 //Player *currentPlayerPtr = boardMain.vec_players_selected[boardMain.getCurrPlayer()];  
                 if (boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()]->getOwnableStatus()){ //means is an owneable building 
                     //check owenrship 
-                    if (boardMain.getOwner(vec_buildings[pos])){ //has an owner
-                        if(boardMain.getOwner(vec_buildings[pos])->getName() == boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName()){ //owner by this player 
+                    if (boardMain.getOwner(vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()])){ //has an owner
+                        if(boardMain.getOwner(vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()])->getName() == boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName()){ //owner by this player 
                             cout << "You own this property, nice!" << endl;
                         } else { //owned by other player
-                            int owed = boardMain.moneyOwed(boardMain.vec_buildings[pos], sum_of_roll);
+                            int owed = boardMain.moneyOwed(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()], sum_of_roll);
                             cout << "This buliding is owned, please pay $" << owed; 
                             if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() >= owed){ //moneyOwed is the owneable building's rent/tuiton (with monopoly and/or improvements IF ITS ACADEMIC etc) (moneyOwed will check if it is a RES or GYM - maybe consider adding a bool in buildings)
                                 boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney((owed * -1)); // removes the money owed from the player who landed on the space 
-                                boardMain.vec_buildings[pos]->owner->setMoney(owed); //pays the owner the money owed
+                                boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()]->owner->setMoney(owed); //pays the owner the money owed
                                 cout << "You have enough money, the rent has been paid. Your current balance is: $" << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() << endl;
                             } else {
                                 cout << "You do not have enough money, please do any of the following - trade <name> <give> <receive>, improve <property> sell, mortgage <property>, or bankrupt : " << endl; 
-                                boardMain.pay(boardMain.vec_players_selected[boardMain.getCurrPlayer()], owed, boardMain.getOwner(vec_buildings[pos]));
+                                boardMain.pay(boardMain.vec_players_selected[boardMain.getCurrPlayer()], owed, boardMain.getOwner(vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()]));
                             }
                         }  
                     } else {
                         //unowned (owner is nullptr) !!!
-                        cout << "This property costs $" << static_cast<Ownable*>(boardMain.vec_buildings[pos])->getCost() << " would you like to buy this property?: [YES or NO] " << endl; 
+                        cout << "This property costs $" << static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()])->getCost() << " would you like to buy this property?: [YES or NO] " << endl; 
                             string ans; 
                             cin >> ans;
                             if (ans == "YES"){
-                                if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() < << static_cast<Ownable*>(boardMain.vec_buildings[pos])->getCost()){
+                                if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() < << static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()])->getCost()){
                                     cout << "You do not have enough money to get this building. Continue your turn: " << endl;
                                 } else {
-                                    boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney((boardMain.vec_buildings[pos]->getCost() * -1)); //removes the money from the player who bought it
-                                    boardMain.vec_buildings[pos]->setOwner(boardMain.vec_players_selected[boardMain.getCurrPlayer()].get()); //sets the player to be the owner of the building 
-                                    boardMain.vec_players_selected[boardMain.getCurrPlayer()]->addOwnable(boardMain.vec_buildings[pos].get()); //adds the building to the players vector of buildings bought 
+                                    boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney((boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()]->getCost() * -1)); //removes the money from the player who bought it
+                                    boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()]->setOwner(boardMain.vec_players_selected[boardMain.getCurrPlayer()].get()); //sets the player to be the owner of the building 
+                                    boardMain.vec_players_selected[boardMain.getCurrPlayer()]->addOwnable(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get()); //adds the building to the players vector of buildings bought 
                                 }
                             } else {
                                 cout << "Okay, please continue your turn." << endl;
@@ -338,10 +338,10 @@ int main(int argc, char* argv[]){
                 } else { //unowneable properties
                     cout << "unownable" << endl;
                     // !! ask judy what to put here
-                    if (pos == 2 || pos == 17 || pos == 33){ //means landed on SLC
+                    if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 2 || boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 17 || boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 33){ //means landed on SLC
                         bool slc = true;
                     }
-                    static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(boradMain.vec_players_selected[boardMain.getCurrPlayer()])
+                    static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(boardMain.vec_players_selected[boardMain.getCurrPlayer()])
                     if (slc){
                         boardMain.stateOfBoardChange();
                         boardMain.printBoard();
