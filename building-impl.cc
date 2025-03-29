@@ -3,7 +3,6 @@ import <iostream>;
 import <string>;
 import <vector>;
 import <algorithm>;
-import <string>;
 
 using namespace std;
 
@@ -28,6 +27,7 @@ void Building::setOwnable(bool b){
     isOwnable = b;
 }
 
+/*
 void Building::setImprovments(size_t numImprovs){
     cout << "TRYING TO SET IMPROVEMENT NUM IN BUILDING CLASS" << endl;
 }
@@ -35,6 +35,7 @@ void Building::setImprovments(size_t numImprovs){
 int Building::getLevel(){
     return -1;
 }
+*/
 
 void Building::printBottom() {
     for (int i = 0; i < bottomLength; i++){

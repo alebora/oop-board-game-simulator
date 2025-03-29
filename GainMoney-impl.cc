@@ -24,7 +24,7 @@ void GainMoney::execute(Player& player) {
         }
     }
     cout << "Gain money: $" << amount << endl;
-    player.getMoney(amount);
+    player.gainMoney(amount);
     // std::cout << "You gained $" << amount << "!" << std::endl;
 }
 

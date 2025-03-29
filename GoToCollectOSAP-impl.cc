@@ -21,7 +21,7 @@ void GoToCollectOSAP::execute(Player& player) {
             cout << "You win a cup!" << endl;
         }
     }
-    player.getMoney(200);
+    player.gainMoney(200);
     player.sentTo(0);
     cout << "Go to collect OSAP!" << endl;
     // std::cout << "You gained $" << amount << "!" << std::endl;

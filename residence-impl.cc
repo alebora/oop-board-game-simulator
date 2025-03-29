@@ -9,8 +9,9 @@ using namespace std;
 
 const int bottomLength = 7;
 
-Residence::Residence(string name, size_t blockPosition, Player *owner): Ownable{name, blockPosition, true, owner, 200} {}
+//Residence::Residence(string name, size_t blockPosition, Player *owner): Ownable{name, blockPosition, true, owner, 200} {}
 
+Residence::Residence(string name, size_t blockPosition): Ownable{name, blockPosition, true, 200} {}
 
 int Residence::calcResCost(int ownedNum) {
     int feeOwed = 0;

@@ -1,5 +1,8 @@
 module Player;
-//import ownable;
+import PRNG;
+import Building;
+import ownable;
+import academic;
 import <cstddef>;
 import <cstdint>;
 import <iostream>;
@@ -7,7 +10,7 @@ import <sstream>;
 import <string>;
 import <vector>;
 import <ctime>;
-import PRNG;
+
 
 using namespace std;
 
@@ -25,7 +28,7 @@ void Player::move(size_t step, bool forward) {
         if (position > 40){
             position -= 40;
             cout << "Pass origin, get $200!" << endl;
-            getMoney(200);
+            gainMoney(200);
             // return true;        // reports to main that the player pass COLLECT OSAP
         }
         if (position == 40){
@@ -40,7 +43,8 @@ void Player::move(size_t step, bool forward) {
     // return false            // reports to main that the player does not need to COLLECT OSAP
 } // Player::move
 
-void Player:: getMoney(int amount){
+
+void Player:: gainMoney(int amount){
     money += amount;
     cout << "worth: " << money << endl;
 }
@@ -119,22 +123,31 @@ void Player::printPlayer() {
     cout << acronym;
 } // Player::printPlayer
 
-// void Player::addOwnable(Ownable* o){
-//     properties.emplace_back(o);
-//     int groupSize = o->BlockGroupMembers.size();
-//     int ct = 0;
-//     for (int i = 0; i < properties.size(); ++i){
-//         for (int j = 0; j < o->BlockGroupMembers[j]; ++j){
-//             if (properties[i] == o->BlockGroupMembers[j]){
-//                 ++ct;
-//             }
-//         }
-//         if (ct == groupSize){
-//             monopolies.emplace_back(o->monopolyBlock); //adds the name of the monopoly group to Players monopolies
-//             break;
-//         }
-//     }
-// }
+void Player::addOwnable(Ownable* o){
+   properties.emplace_back(o);
+//    int groupSize = o->BlockGroupMembers.size(); // CHECK BlockGroupMembers HOW TO WORK AROUND
+//    int ct = 0;
+//    for (int i = 0; i < properties.size(); ++i){
+//        for (int j = 0; j < o->BlockGroupMembers[j]; ++j){
+//            if (properties[i] == o->BlockGroupMembers[j]){
+//                ++ct;
+//            }
+//        }
+//        if (ct == groupSize){
+//            monopolies.emplace_back(o->monopolyBlock); //adds the name of the monopoly group to Players monopolies
+//            break;
+//        }
+//    }
+   // NEED TO SET THE OTHER ONE TO TRUE AS WELL
+   if (o->getBType() == 'G'){
+       setNumGymOwned(1);
+   }
+   if (o->getBType() == 'R'){
+       setNumResOwned(1);
+   }
+    //ALSO MAKE THE OTHER NEIGHBOUR BUILDINGS BOOL TO TRUE FOR MONOPOLY
+}
+
 
 bool Player::findMonopolies(string monopolyName){
     for (int i = 0; i < monopolies.size(); ++i){
@@ -145,44 +158,54 @@ bool Player::findMonopolies(string monopolyName){
     return false;
 }
 
-// void Player::removeOwnable(Ownable* o){
-//     int i;
-//     for (i = 0; i < properties.size(); ++i){
-//         if (properties[i]->name == o->name){
-//             break;
-//         }
-//     }
-//     properties.erase(properties.begin() + i);
-// }
+void Player::removeOwnable(Ownable* o){
+   int i = 0;
+   for (i = 0; i < properties.size(); ++i){
+       if (properties[i]->getBName() == o->getBName()){
+           break;
+       }
+   }
+   properties.erase(properties.begin() + i);
+}
 
-// Ownable* Player::getOwnable(int pos){
-//     return properties[pos];
-// }
 
-// Ownable* Player::getOwnable(string name){
-//     for (i; i < properties.size(); ++i){
-//         if (properties[i]->name == name){
-//             return properties[i];
-//         }
-//     }
-// }
+Ownable* Player::getOwnable(int pos){
+   return properties[pos];
+}
 
-// void Player::printPlayer(){
-//     //ask Judy what fomat she needs
-// }
 
-// bool Player::payBank(){
-//     //what is this
-// }
+Ownable* Player::getOwnable(string name){
+   for (int i = 0; i < properties.size(); ++i){
+       if (properties[i]->getBName() == name){
+           return properties[i];
+       }
+   }
+}
 
-// bool Player::payPlayer(){
-//     //what is this
-// }
 
-// int Player::total_worth(){
-//     //calculate total worth of Player money + assests (in properties and improvements) 
-// }
 
+
+int Player::total_worth(){
+   //calculate total worth of Player money + assests (in properties and improvements)
+   int moneyTotal = money;
+   int improvementsTotal = 0;
+   int propertiesTotal = 0;
+   for (int i = 0; i < properties.size(); ++i){
+       //sell an improvement, they receive half of the cost of the improvement!!!
+       if (properties[i]->getBType() == 'A'){
+            Academic *a = static_cast<Academic*>(properties[i]);
+           if (a->getLevel() != 0) {
+                for (int j = 0; j < a->getLevel(); ++j){
+                    improvementsTotal += (a->getImprovementCost() / 2);
+                }
+           }
+       }
+       //When a property is mortgaged, they receive half of the cost of the property
+       // CHECK IF ITS NOT MORTGAGED
+       propertiesTotal += (properties[i]->getCost() / 2);
+   }
+   return moneyTotal + improvementsTotal + propertiesTotal;
+}
 
 // Getters and Setters: 
 
@@ -231,7 +254,7 @@ int Player::getNumGymOwned(){
 }
 
 void Player::setNumGymOwned(int n){
-    numGym = n;
+    numGym += n;
 }
 
 int Player::getNumResOwned(){
@@ -239,7 +262,7 @@ int Player::getNumResOwned(){
 }
 
 void Player::setNumResOwned(int n){
-    numRes = n;
+    numRes += n;
 }
 
 int Player::getJailStatusNum(){
@@ -274,15 +297,20 @@ void Player::setBankruptStatus(bool b){
     isBankrupt = b;
 }
 
-// void Player::printAssests(){
-//     cout << "Assets of: " << getName() << " " << getAcronym() << ":" << endl; 
-//     cout << "Money: $" << getMoney() << "  Numer of RimCups: " << getRimCups() << endl; 
-//     cout << "Properties owned: "; 
-//     int ct = 0; 
-//     // while (ct < properties.size()){
-//     //     cout << properties[ct]->getBName() << " - improvement number: " << properties[ct]->getLevel() << endl;
-//     // }
-//     cout << "Just incase you were lazy to calculate total_worth... its: " << total_worth() << endl;
-//     cout << "---------------------------------------------------------" << endl;
-// }
+void Player::printAssests(){
+    cout << "Assets of: " << getName() << " " << getAcronym() << ":" << endl; 
+    cout << "Money: $" << getMoney() << "  Number of RimCups: " << getRimCups() << endl; 
+    cout << "Properties owned: "; 
+    int ct = 0; 
+    while (ct < properties.size()){
+        if (properties[ct]->getBType() == 'A') {
+            cout << properties[ct]->getBName() << " - improvement number: " << (static_cast<Academic*>(properties[ct]))->getLevel() << endl;
+        } else {
+            cout << properties[ct]->getBName() << endl;
+        }
+        ++ct;
+    }
+    cout << "Just in case you were too lazy to calculate your total worth..., it's: " << total_worth() << endl;
+    cout << "---------------------------------------------------------" << endl;
+}
 

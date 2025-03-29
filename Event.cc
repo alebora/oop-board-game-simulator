@@ -1,12 +1,13 @@
 export module Event;
+import Player;
+import PRNG;
 import <cstddef>; // defines size_t i.e. an unsigned int
 import <cstdint>;
 import <ctime>;
 import <iostream>;
 import <string>;
 import <vector>;
-import Player;
-import PRNG;
+
 // #include "subject.h"
 // #include "observer.h"
 // #include "info.h"

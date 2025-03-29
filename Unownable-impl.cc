@@ -69,7 +69,7 @@ void Unownable::triggerEvent(Player& player){
     } 
     if (BName == "COLLECT OSAP"){
         cout << "Collect $200!" << endl;
-        player.getMoney(200);
+        player.gainMoney(200);
     } 
     if (BName == "DC Tims Line"){
         std::unique_ptr event = std::make_unique<OnDcTimsLine>();
@@ -84,7 +84,7 @@ void Unownable::triggerEvent(Player& player){
     }
     if (BName == "COOP FEE"){
         cout << "Pay $150 Coop fee!" << endl;
-        player.getMoney(-150);
+        player.loseMoney(150);
     }
     if (BName == "TUITION"){
         cout << "Pay tuition: $300(1) or 1/10 total worth(2)?" << endl;
@@ -92,7 +92,7 @@ void Unownable::triggerEvent(Player& player){
         while (true){
             cin >> response;
             if (response == '1'){
-                player.getMoney(-300);
+                player.loseMoney(300);
                 break;
             }
             if (response == '2'){

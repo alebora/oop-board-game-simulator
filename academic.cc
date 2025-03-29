@@ -1,6 +1,6 @@
 export module academic;
 import ownable;
-import Player;
+//import Player;
 import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
@@ -20,7 +20,9 @@ export class Academic: public Ownable {
     bool hasMonopoly;
 
     public:
-        Academic(string name,  size_t blockPosition, Player *owner, size_t improvementLevel, string monopolyBlock, unique_ptr<vector<size_t>> tuition, int purchaseCost, int improvementCost, bool hasMonopoly);
+        //Academic(string name,  size_t blockPosition, Player *owner, size_t improvementLevel, string monopolyBlock, unique_ptr<vector<size_t>> tuition, int purchaseCost, int improvementCost, bool hasMonopoly);
+
+        Academic(string name,  size_t blockPosition, size_t improvementLevel, string monopolyBlock, unique_ptr<vector<size_t>> tuition, int purchaseCost, int improvementCost, bool hasMonopoly);
         vector<Ownable*> BlockGroupMembers;
 
         int getLevel() const;
