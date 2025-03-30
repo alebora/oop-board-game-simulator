@@ -1,5 +1,9 @@
 export module academic;
 import ownable;
+<<<<<<< HEAD
+=======
+//import Player;
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
@@ -19,6 +23,11 @@ export class Academic: public Ownable {
     bool hasMonopoly;
 
     public:
+<<<<<<< HEAD
+=======
+        //Academic(string name,  size_t blockPosition, Player *owner, size_t improvementLevel, string monopolyBlock, unique_ptr<vector<size_t>> tuition, int purchaseCost, int improvementCost, bool hasMonopoly);
+
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
         Academic(string name,  size_t blockPosition, size_t improvementLevel, string monopolyBlock, unique_ptr<vector<size_t>> tuition, int purchaseCost, int improvementCost, bool hasMonopoly);
         vector<Ownable*> BlockGroupMembers;
 
@@ -35,4 +44,9 @@ export class Academic: public Ownable {
         void printImpr();
         // void tuitionWithImpr(int p0, int p1, int p2, int p3, int p4, int p5);
         virtual void printLine(int lineNum) override;
+<<<<<<< HEAD
+=======
+        void setHasMonopoly(bool b);
+        bool getHasMonopoly();
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 };

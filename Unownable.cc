@@ -1,15 +1,23 @@
 export module Unownable;
-import Building;
 import Player;
 import Event;
 import OnDcTimsLine;
 import EventFactory;
+<<<<<<< HEAD
+=======
+import Building;
+
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
 import <memory>;
 
+<<<<<<< HEAD
 using namespace std;
+=======
+
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 
 export class Unownable : public Building {
 
@@ -19,6 +27,7 @@ export class Unownable : public Building {
     void triggerEvent(Player& player);
     virtual void printName() override;
     virtual void printLine(int lineNum) override;
+<<<<<<< HEAD
     // Unownable(string Bname, int pos);
     // void executeUnownable(int pos, Player &p);
     // void Tuition();
@@ -31,18 +40,8 @@ export class Unownable : public Building {
     //void printLongName(int lineNum); //NOT IN UML 
     // void setLiving();                   // Marks cell as alive. Called by Grid::turnOn.
     // void reset();                       // Resets neighbour count to 0.
+=======
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 
-    // Grid calls this to start the process whereby a cell notifies its neighbours if it
-    // is alive.
-    // void broadcastIfAlive();
-    
-    // // My neighbours will call this to let me know if they're alive. 
-    // void notify( Subject & whoNotified ) override;
-                                                
-    // // Reassess my living-or-dead status, based on information from neighbours.
-    // void recalculate(); 
-
-    // // Observer calls this to get information about cell.
-    // virtual Info getInfo() const override;
 };
 

@@ -7,6 +7,10 @@ import <iomanip>;
 import <memory>;
 import <ctime>;
 import <cstdint>;
+<<<<<<< HEAD
+=======
+
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 using namespace std;
 
 void CaughtByTims::execute(Player& player) {

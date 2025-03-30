@@ -1,26 +1,43 @@
 module Unownable;
+<<<<<<< HEAD
+=======
+// #include "observer.h
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 import <iostream>;
 import <vector>;
 import <algorithm>;
 import <string>;
+<<<<<<< HEAD
 //import <iomanip>;
+=======
+import <iomanip>;
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 import <memory>;
 using namespace std;
-// import <iomanip>;
 
 const int bottomLength = 7;
+<<<<<<< HEAD
 
 Unownable::Unownable(std::string BName, size_t pos): Building{BName, pos, false} {
     // ownable = false;
 }
+=======
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 
+Unownable::Unownable(std::string BName, size_t pos): Building{BName, pos, false} {
+    // ownable = false;
+}
 
 void Unownable::printLongName(int lineNum) {
     std::string name = this->getBName();
     int length = name.length();
     if (length <= 7){
         if (lineNum == 1){
+<<<<<<< HEAD
             //std::cout << std::left << std::setw(bottomLength) << name << "|";
+=======
+            std::cout << std::left << std::setw(bottomLength) << name << "|";
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
         } else {
             emptyRow();
         }
@@ -29,9 +46,15 @@ void Unownable::printLongName(int lineNum) {
         std::string first = name.substr(0, lastSpace);
         std::string second = name.substr(lastSpace + 1);
         if (lineNum == 1){
+<<<<<<< HEAD
             //std::cout << left << setw(bottomLength) << first << "|";
         } else {
             //std::cout << left << setw(bottomLength) << second << "|";
+=======
+            std::cout << left << setw(bottomLength) << first << "|";
+        } else {
+            std::cout << left << setw(bottomLength) << second << "|";
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
         }
     }
 }
@@ -70,7 +93,11 @@ void Unownable::triggerEvent(Player& player){
     } 
     if (BName == "COLLECT OSAP"){
         cout << "Collect $200!" << endl;
+<<<<<<< HEAD
         player.getMoney(200);
+=======
+        player.gainMoney(200);
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
     } 
     if (BName == "DC Tims Line"){
         std::unique_ptr event = std::make_unique<OnDcTimsLine>();
@@ -85,7 +112,11 @@ void Unownable::triggerEvent(Player& player){
     }
     if (BName == "COOP FEE"){
         cout << "Pay $150 Coop fee!" << endl;
+<<<<<<< HEAD
         player.getMoney(-150);
+=======
+        player.loseMoney(150);
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
     }
     if (BName == "TUITION"){
         cout << "Pay tuition: $300(1) or 1/10 total worth(2)?" << endl;
@@ -93,7 +124,11 @@ void Unownable::triggerEvent(Player& player){
         while (true){
             cin >> response;
             if (response == '1'){
+<<<<<<< HEAD
                 player.getMoney(-300);
+=======
+                player.loseMoney(300);
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
                 break;
             }
             if (response == '2'){
@@ -111,6 +146,7 @@ void Unownable::triggerEvent(Player& player){
 //     }
     
 // }
+<<<<<<< HEAD
 
 // size_t Building::getBPos() const {
 //     return buildingPosition;
@@ -122,6 +158,8 @@ void Unownable::triggerEvent(Player& player){
 //     }
 // } // Subject::getObserverNames
 
+=======
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 
 // size_t Building::getBPos() const {
 //     return buildingPosition;

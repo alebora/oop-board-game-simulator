@@ -2,6 +2,11 @@ export module Board;
 import Player;
 import Subject;
 import Building;
+import academic;
+import ownable;
+import gym;
+import Unownable;
+import residence;
 import <iostream>;
 import <string>;
 import <memory>;
@@ -17,11 +22,11 @@ export class Board: public Subject {
         vector<unique_ptr<Player>> vec_players_selected;
         vector<unique_ptr<Building>> vec_buildings;
         //Player* getPlayer(int n); //DEL LATER
-        unique_ptr<Player> getPlayer(string s); //DID NOT ADD TO UML BUT IS IMPLEMENTED 
+        Player* getPlayer(string s); //DID NOT ADD TO UML BUT IS IMPLEMENTED 
         void printBoard();
         void stateOfBoardChange();
         int getNumPlayers();
-        unique_ptr<Building> getBuilding(string Bname);
+        Building* getBuilding(string Bname);
         void addPlayer(unique_ptr<Player> player);
         void addBuildingINIT(string Bname, string block, int improvements, int pos, int pur, int imp, size_t z, size_t o, size_t t, size_t thr, size_t f, size_t fiv);
         int getCurrPlayer();
@@ -33,12 +38,21 @@ export class Board: public Subject {
         void academicImprovements(Building *property, string action, Player *player);
         void mortgage(Building *property, Player *player);
         void unmortgage(Building *property, Player *player);
+<<<<<<< HEAD
         void bankrupt(Player *player, int Owed, Player *toWho);
         void auction(Building *building);
         void pay(Player *whoOwes, int howMuchOwed, Player *toWhoOwed);
         Player* getOwner(Building *b);
         //void Board::setOwner(Building *b, Player *p); 
         // void Board::removerOwner(Building *b);
+=======
+        bool bankrupt(Player *player, int Owed, Player *toWho);
+        void auction(Building *building);
+        void pay(Player *whoOwes, int howMuchOwed, Player *toWhoOwed);
+        Player* getOwner(Building *b);
+        void setOwner(Building *b, Player *p); 
+        void removeOwner(Building *b);
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 };
 
 

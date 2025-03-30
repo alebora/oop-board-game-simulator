@@ -1,12 +1,22 @@
 export module OnDcTimsLine;
+<<<<<<< HEAD
+=======
+import Event;
+import Player;
+import PRNG;
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 import <cstddef>; // defines size_t i.e. an unsigned int
 import <iostream>;
 import <string>;
 import <vector>;
 import <iostream>;
+<<<<<<< HEAD
 import Event;
 import Player;
 import PRNG;
+=======
+
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 // #include "observer.h"
 // #include "info.h"
 

@@ -24,7 +24,11 @@ void LoseMoney::execute(Player& player) {
         }
     }
     cout << "Lose money: $" << amount << endl;
+<<<<<<< HEAD
     player.getMoney(-amount);
+=======
+    player.loseMoney(amount);
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
     // std::cout << "You gained $" << amount << "!" << std::endl;
 }
 

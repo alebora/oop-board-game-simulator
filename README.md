@@ -1,3 +1,0 @@
-# watopoly
-test 1
-

@@ -1,9 +1,14 @@
 module Building;
-import <string>;
 import <iostream>;
+<<<<<<< HEAD
 import <vector>;
 import <algorithm>;
 
+=======
+import <string>;
+import <vector>;
+import <algorithm>;
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 
 using namespace std;
 
@@ -28,6 +33,7 @@ void Building::setOwnable(bool b){
     isOwnable = b;
 }
 
+/*
 void Building::setImprovments(size_t numImprovs){
     cout << "TRYING TO SET IMPROVEMENT NUM IN BUILDING CLASS" << endl;
 }
@@ -35,6 +41,46 @@ void Building::setImprovments(size_t numImprovs){
 int Building::getLevel(){
     return -1;
 }
+*/
+
+void Building::printBottom() {
+    for (int i = 0; i < bottomLength; i++){
+        cout << "_";
+    }
+    cout << "|";
+} // Subject::getObserverNames
+
+void Building::emptyRow(){
+    for (int i = 0; i < bottomLength; i++){
+        cout << " ";
+    }
+    cout << "|";
+}
+
+void Building::printPlayer(){
+    for (size_t i = 0; i < playerOn.size(); i++){
+        cout << playerOn[i];
+    }
+    for (size_t i = 0; i < bottomLength - playerOn.size(); i++){
+        cout << " ";
+    }
+    cout << "|";
+}
+
+void Building::attachPlayer(char token){
+    playerOn.push_back(token);
+}
+
+void Building::clearPlayer(){
+    if (playerOn.size() > 0){
+        playerOn = std::vector<char>();
+    }
+}
+
+bool Building::ifOwnable(){
+    return isOwnable;
+}
+
 
 void Building::printBottom() {
     for (int i = 0; i < bottomLength; i++){

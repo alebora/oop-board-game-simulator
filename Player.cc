@@ -8,7 +8,6 @@ import <string>;
 import <vector>;
 using namespace std;
 
-
 export class Player{
     size_t position;
     string name;
@@ -24,7 +23,12 @@ export class Player{
     public: 
         vector<Building*> properties;
         vector<string> monopolies;
+<<<<<<< HEAD
 
+=======
+        //vector<Building*> properties;
+        vector<Ownable*> properties;
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
         Player(string name, char acronym, int cups, int money, int pos, int jail, int turns);
         string getName();
         void setName(string name);
@@ -33,6 +37,7 @@ export class Player{
         char getAcronym();
         void setAcronym(char c);
         int getMoney();
+        void gainMoney(int amount);
         void setMoney(int n);
         int getDiceSum();
         void setDiceSum(int n);
@@ -48,13 +53,28 @@ export class Player{
         void setRimCups(int n);
         bool getBankruptStatus();
         void setBankruptStatus(bool b);
-        void printPlayer();
         bool payBank();
         bool payPlayer();
         int total_worth();
         bool findMonopolies(string monopolyName);
+        void addOwnable(Ownable* o);
+        void removeOwnable(Ownable* o);
+        Ownable *getOwnable(int pos);
+        Ownable *getOwnable(string name);
+        void printPlayer();
         void move(size_t step, bool forward);
+        void loseMoney(int amount);
+        void loseCup();
+        void sentTo(size_t pos);
+        int ifInJail();
+        int timesInJail();
+        int cups();
+        size_t rollDice();
+        size_t rollDouble();
+        void setFree();
+        void incJailTurn();
         void winCup();
+<<<<<<< HEAD
         void addOwnable(Ownable* o);
         // void removeOwnable(Ownable* o);
         // Ownable *getOwnable(int pos);
@@ -75,6 +95,10 @@ export class Player{
         void broadcastPos(Building* bld);
         
         //void printAssests();
+=======
+        void broadcastPos(Building* bld);
+        void printAssests();
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 };
 
 

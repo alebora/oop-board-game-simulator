@@ -1,4 +1,5 @@
 export module EventFactory;
+<<<<<<< HEAD
 import <cstddef>; // defines size_t i.e. an unsigned int
 import <cstdint>;
 import <iostream>;
@@ -6,6 +7,8 @@ import <string>;
 import <vector>;
 import <memory>;
 import <ctime>;
+=======
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 import Event;
 import PRNG;
 import MoveForward;
@@ -14,6 +17,14 @@ import GainMoney;
 import LoseMoney;
 import CaughtByTims;
 import GoToCollectOSAP;
+import <cstddef>; // defines size_t i.e. an unsigned int
+import <cstdint>;
+import <iostream>;
+import <string>;
+import <vector>;
+import <memory>;
+import <ctime>;
+
 using namespace std;
 // #include "subject.h"
 // #include "observer.h"

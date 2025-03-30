@@ -4,14 +4,39 @@ import Building;
 import <vector>;
 import <algorithm>;
 import <string>;
+<<<<<<< HEAD
 import <vector>;
+=======
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 import <iostream>;
 
 using namespace std;
 
 const int bottomLength = 7;
 
+<<<<<<< HEAD
 Ownable::Ownable(string name, size_t blockPosition, bool isOwnable, int propertyCost): Building{name, blockPosition, isOwnable}, propertyCost{propertyCost}, isMortgaged{false} {}
+=======
+//Ownable::Ownable(string name, size_t blockPosition, bool isOwnable, Player *owner, int propertyCost): Building{name, blockPosition, isOwnable}, owner{owner}, propertyCost{propertyCost}, isMortgaged{false} {}
+
+Ownable::Ownable(string name, size_t blockPosition, bool isOwnable, int propertyCost): Building{name, blockPosition, isOwnable}, propertyCost{propertyCost}, isMortgaged{false} {}
+
+
+/*
+Player* Ownable::getOwner() const {
+    return owner;
+}
+
+void Ownable::setOwner( Player *player ) {
+    owner = player;
+}
+
+void Ownable::removeOwner() {
+    owner = nullptr;
+}
+*/
+
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 
 int Ownable::getCost() const {
     return propertyCost;
@@ -37,5 +62,9 @@ void Ownable::printName(){
 
 void Ownable::printLine(int lineNum){
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> fc5d07222dfee5709f5b2587a9f26c92b42d165f
 Ownable::~Ownable() {}
 

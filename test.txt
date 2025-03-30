@@ -1,6 +1,0 @@
-2
-Sasha S 0 5000 5
-Rost R 0 5001 7
-AL Rost 3
-ML BANK 1
-MKV Sasha 0
