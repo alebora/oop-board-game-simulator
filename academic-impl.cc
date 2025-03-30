@@ -78,6 +78,14 @@ void Academic::printLine(int lineNum){
     }
 }
 
+void Academic::setHasMonopoly(bool b){
+    hasMonopoly = b;
+}
+
+bool Academic::getHasMonopoly(){
+    return hasMonopoly;
+}
+
 // void Academic::tuitionWithImpr(int p0, int p1, int p2, int p3, int p4, int p5){
 //     // tuitionBePaid = {};
 //     tuitionBePaid.clear();  // Clear the vector before pushing new values

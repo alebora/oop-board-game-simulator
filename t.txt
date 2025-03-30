@@ -1,2 +1,0 @@
-libraries:
-algorithm cassert cstddef cstdint ctime fstream iomanip iostream memory sstream string vector

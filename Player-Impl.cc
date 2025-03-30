@@ -10,6 +10,7 @@ import <sstream>;
 import <string>;
 import <vector>;
 import <ctime>;
+import <map>;
 
 
 using namespace std;
@@ -138,6 +139,29 @@ void Player::addOwnable(Ownable* o){
 //            break;
 //        }
 //    }
+    if (o->getBType() == 'A'){ //if academic then looks for monopoly 
+        map<string, int> m = {{"Arts1", 2}, {"Arts2", 3}, {"Eng", 3}, {"Health", 2}, {"Env", 3}, {"Sci1", 3}, {"Sci2", 3}, {"Math", 2}};
+        string block = (static_cast<Academic*>(o))->getMonopolyBlock();
+        int numBlocks = m[block];
+        int ct = 0;
+        
+        for (int i = 0; i < properties.size(); ++i){
+            if (properties[i]->getBType() == 'A'){
+                if ((static_cast<Academic*>(properties[i]))->getMonopolyBlock() == block){
+                    ++ct;
+                }
+            }
+        }
+        if (ct == numBlocks){ // found monopoly
+            for (int i = 0; i < properties.size(); ++i){
+                if (properties[i]->getBType() == 'A'){
+                    if ((static_cast<Academic*>(properties[i]))->getMonopolyBlock() == block){
+                        (static_cast<Academic*>(properties[i]))->setHasMonopoly(true);
+                    }
+                }
+            }
+        }
+    }
    // NEED TO SET THE OTHER ONE TO TRUE AS WELL
    if (o->getBType() == 'G'){
        setNumGymOwned(1);
@@ -300,11 +324,11 @@ void Player::setBankruptStatus(bool b){
 void Player::printAssests(){
     cout << "Assets of: " << getName() << " " << getAcronym() << ":" << endl; 
     cout << "Money: $" << getMoney() << "  Number of RimCups: " << getRimCups() << endl; 
-    cout << "Properties owned: "; 
+    cout << "Properties owned: " << endl; 
     int ct = 0; 
     while (ct < properties.size()){
         if (properties[ct]->getBType() == 'A') {
-            cout << properties[ct]->getBName() << " - improvement number: " << (static_cast<Academic*>(properties[ct]))->getLevel() << endl;
+            cout << properties[ct]->getBName() << " - improvement number: " << (static_cast<Academic*>(properties[ct]))->getLevel() << "    Mortgage Status: " << properties[ct]->getMortgageState() << endl;
         } else {
             cout << properties[ct]->getBName() << endl;
         }

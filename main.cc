@@ -123,15 +123,19 @@ void selectPlayers(int numPlayers, Board *b){
 
 
 bool loadGame(string filename, Board *B){ //need to have info on ownable buildings to implement
-   ifstream f(filename); //all 40
+   ifstream f(filename);
    if (!f.is_open()){
        return false;
    } else {
        string line;
        int n;
-       f >> n;
+       getline(f,line);
+       istringstream iss(line);
+       iss >> n;
+       cout << "n: " << n << endl;
        while (n > 0){
            getline(f, line);
+           cout << "line: " << line << endl;
            istringstream iss(line);
            string player1;
            char c;
@@ -141,6 +145,7 @@ bool loadGame(string filename, Board *B){ //need to have info on ownable buildin
            int jail = 0;
            int turns = 0;
            iss >> player1 >> c >> TimsCups >> money >> position;
+           cout << "player 1: " << player1 << endl;
            if (position == 10){
                iss >> jail;
                if (jail == 1) {
@@ -152,18 +157,31 @@ bool loadGame(string filename, Board *B){ //need to have info on ownable buildin
            --n;
        } //added all the players
        cout << "All the players have been added!" << endl;
+       cout << "The players are: " << endl;
+       for (int i = 0; i < B->vec_players_selected.size(); ++i){
+            cout << B->vec_players_selected[i]->getName() << " " << B->vec_players_selected[i]->getAcronym() << endl;
+       }
        //int buildingPos = 0; //will keep track of each building
        string buildingName;
        string owner;
        int improvements;
        while (getline(f, line)){
            istringstream iss(line);
+           cout << "line2: " << line << endl;
            iss >> buildingName >> owner >> improvements;
            for (int i = 0; i < B->vec_buildings.size(); ++i){
                if (B->vec_buildings[i]->getBName() == buildingName){
-                   B->vec_buildings[i]->setImprovments(improvements);
-
-
+                    if (improvements == -1){
+                        (static_cast<Ownable*>(B->vec_buildings[i].get()))->setMortgageState(true);
+                        if ((static_cast<Ownable*>(B->vec_buildings[i].get()))->getBType() == 'A'){
+                            static_cast<Academic*>(B->vec_buildings[i].get())->setImprovments(0);
+                        }
+                    }
+                    if ((static_cast<Ownable*>(B->vec_buildings[i].get()))->getBType() == 'A'){
+                        if (improvements != -1){
+                            static_cast<Academic*>(B->vec_buildings[i].get())->setImprovments(improvements);
+                        }
+                    }
                    //find player by name, add this building to their properties vector !!!!!!!!
                    // determine if has monopoly from owner buildings - covered by addOwnable
                    if (owner != "BANK"){
@@ -181,10 +199,19 @@ bool loadGame(string filename, Board *B){ //need to have info on ownable buildin
            }
            //++buildingPos;
        }
-       //add in the monopoly finder
-
-
+       cout << "out of while" << endl;
+       cout << "MONOPOLIES:" << endl;
+       for (int i = 0; i < B->vec_players_selected[0]->properties.size(); ++i){
+            if (B->vec_players_selected[0]->properties[i]->getBType() == 'A'){
+                if ((static_cast<Academic*>(B->vec_players_selected[0]->properties[i]))->getHasMonopoly()){
+                    cout << B->vec_players_selected[0]->properties[i]->getBName() << endl;
+                }
+            }
+       }
+       f.close();
    }
+   
+   return true;
 }
 
 
@@ -206,14 +233,17 @@ int main(int argc, char* argv[]){
        cout << "ENTERED" << endl;
        //rmr the case when you could have both commands at once: -load file.txt -testing OR -testing -load file.txt
        int ct = 1;
-       cout << "argv first el: " << argv[1] << endl;
+       cout << "argv first el: " << argv[1] << " size: " << argc << endl;
        while (ct < argc) {
-           if (argv[ct] == "-load") { // !! why does this not equal
+            cout << "in while" << endl;
+            string argCommand = argv[ct];
+            if (argCommand == "-load") { // !! why does this not equal
                cout << "before1" << endl;
                //check if filename is valid:
                    // if not valid state it and just exit
                ++ct;
-               string filename = argv[ct];
+               argCommand = argv[ct];
+               string filename = argCommand;
                cout << "before" << endl;
                if (loadGame(filename, &boardMain)) {//get info from the file
                    cout << "worked" << endl;
@@ -223,13 +253,19 @@ int main(int argc, char* argv[]){
                    cout << "invalid filename, exiting program" << endl;
                    return 0; //exit program
                }
-           } else if (argv[ct] == "-testing"){
+               ++ct;
+           } else if (argCommand == "-testing"){
                //switch boolean to start calling the testing dice not the regular dice;
                fair_dice = false;
                ++ct;
+           } else {
+                cout << "not valid argument line command. Exiting." << endl;
+                ++ct; 
+                return 0;
            }
-       }        
-   } else {
+       }
+       cout << "ct: " << ct << endl;     
+    } else {
        cout << "Hello!! Welcome to Watopoly, please enter the number of players (between 2 and 6): " << endl;
        int n; //numPlayers
        while(!(cin >> n) || n < 2 || n > 6) {
@@ -250,212 +286,239 @@ int main(int argc, char* argv[]){
        // n is numer of players
        selectPlayers(n, &boardMain);
       
-    // else for the player selection
-       cout << "number of players is: " << boardMain.getNumPlayers() << endl;
-       cout << "the players chosen are: " << endl;
-       for (int i = 0; i < n; ++i){
-           cout << boardMain.vec_players_selected[i]->getName() << " " << boardMain.vec_players_selected[i]->getAcronym() << endl;
-       }
-       cout << "It is now " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName() << "'s turn!" << endl;
-       string command;
-       while (cin >> command){
-           // !! DO WE ADD END OF GAME CHECK HERE???
-           if (boardMain.vec_players_selected.size() == 1){ // indicates end of game
-               cout << "after while:" << endl;
-               cout << "Congratulations " << boardMain.vec_players_selected[0]->getName() << "!! YOu have won the game and dominatd Watopoly, thank you for playing:)" << endl;
-               cout << "Game made by: Sasha Boruk, Shirley Xiao, and Jiayi Zhao. 2025" << endl;
-               return 0;
-           }
-           //
-           cout << " you entered: " << command << endl;
-           if (command == "roll"){ // roll OR roll <int> <int> if -testing in args
-               int sum_of_roll = 0;
-               vector<int> v;
-               if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getJailStatusNum() == 0) {
-                   if (fair_dice){
-                       DiceRoll(&v);
-                       sum_of_roll = v[0] + v[1];
-                   } else { // are we allowed a unfair dice when in jail?
-                       int x;
-                       int y;
-                       cin >> x;
-                       cin >> y;
-                       while (x < 0) {
-                           cout << "Oops, the first number is negative: please enter a postive number: " << endl;
-                           cin >> x;
-                       }
-                       while (x < 0) {
-                           cout << "Oops, the second number is negative: please enter a postive number: " << endl;
-                           cin >> y;
-                       }
-                       sum_of_roll = x + y;
-                   }
-               } else {
-                   //in jail
-                   static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(*boardMain.vec_players_selected[boardMain.getCurrPlayer()]);
-               }
-               //for testing:
-               cout << "your dice sum is: " << sum_of_roll << endl;
-
-
-               boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setPos(sum_of_roll); //updates the player position
-               if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() > 40){ //checks if went around the circle  // WHEN LANDING ON OSAP WILL NOT GAIN 200 THROUGH THIS (so when pos == 0)
-                   boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setPos(-40);
-                   //means passed Go (or landed on Go)
-                   boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney(200);
-               } //maybe change this whole block to be move(sum_of_roll, true). so player*->move(...);
-              
-               boardMain.stateOfBoardChange();
-               boardMain.printBoard();
-               // // need to check if players pos is on owneable or unowneable space
-               int pos = boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos();
-               //Player *currentPlayerPtr = boardMain.vec_players_selected[boardMain.getCurrPlayer()]; 
-               if (boardMain.vec_buildings[pos]->getOwnableStatus()){ //means is an owneable building
-                   //check owenrship
-                   if (boardMain.getOwner(boardMain.vec_buildings[pos].get())){ //has an owner
-                       if(boardMain.getOwner(boardMain.vec_buildings[pos].get())->getName() == boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName()){ //owner by this player
-                           cout << "You own this property, nice!" << endl;
-                       } else { //owned by other player
-                           int owed = boardMain.moneyOwed(boardMain.vec_buildings[pos].get(), sum_of_roll);
-                           cout << "This buliding is owned, please pay $" << owed;
-                           if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() >= owed){ //moneyOwed is the owneable building's rent/tuiton (with monopoly and/or improvements IF ITS ACADEMIC etc) (moneyOwed will check if it is a RES or GYM - maybe consider adding a bool in buildings)
-                               boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney((owed * -1)); // removes the money owed from the player who landed on the space
-                               //boardMain.vec_buildings[pos]->owner->setMoney(owed); //pays thea owner the money owed
-                               boardMain.getOwner(boardMain.vec_buildings[pos].get())->setMoney(owed); //pays thea owner the money owed
-                               cout << "You have enough money, the rent has been paid. Your current balance is: $" << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() << endl;
-                           } else {
-                               cout << "You do not have enough money, please do any of the following - trade <name> <give> <receive>, improve <property> sell, mortgage <property>, or bankrupt : " << endl;
-                               boardMain.pay(boardMain.vec_players_selected[boardMain.getCurrPlayer()].get(), owed, boardMain.getOwner(boardMain.vec_buildings[pos].get()));
-                           }
-                       } 
-                   } else {
-                       //unowned (owner is nullptr) !!!
-                       cout << "This property costs $" << static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->getCost() << " would you like to buy this property?: [YES or NO] " << endl;
-                           string ans;
-                           cin >> ans;
-                           if (ans == "YES"){
-                               if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() < static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->getCost()){
-                                   cout << "You do not have enough money to get this building. Continue your turn: " << endl;
-                               } else {
-                                   boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney((static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->getCost() * -1)); //removes the money from the player who bought it
-                                   boardMain.setOwner(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get(), boardMain.vec_players_selected[boardMain.getCurrPlayer()].get()); //sets the player to be the owner of the building
-                                   boardMain.vec_players_selected[boardMain.getCurrPlayer()]->addOwnable(static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())); //adds the building to the players vector of buildings bought
-                               }
-                           } else {
-                               cout << "Okay, please continue your turn." << endl;
-                           } 
-                   }                    
-               } else { //unowneable properties
-                   cout << "unownable" << endl;
-                   bool slc = false;
-                   if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 2 || boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 17 || boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 33){ //means landed on SLC
-                       slc = true;
-                   }
-                   static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(*boardMain.vec_players_selected[boardMain.getCurrPlayer()]);
-                   if (slc){
-                       boardMain.stateOfBoardChange();
-                       boardMain.printBoard();
-                   }
-               }
-               // boardMain.stateOfBoardChange(); //notifies there is change in display
-               // boardMain.notifyObservers(); //notifies there is change in display
-           }else if (command == "save"){ // save <filename>
-               boardMain.stateOfBoardChange();
-               string filename;
-               cin >> filename;
-               while (filename == "") {
-                   cout << "Not a valid filename, please input the filename again: " << endl;
-                   cin >> filename;
-               }
-               ofstream f{filename};
-               f << boardMain.vec_players_selected.size() << endl; // start giving game info
-               for (int i = 0; i < boardMain.vec_players_selected.size(); ++i){
-                   f << boardMain.vec_players_selected[i]->getName() << " " << boardMain.vec_players_selected[i]->getAcronym() << " " << boardMain.vec_players_selected[i]->getRimCups() << " " << boardMain.vec_players_selected[i]->getMoney() << " " << boardMain.vec_players_selected[i]->getPos();
-                   if (boardMain.vec_players_selected[i]->getPos() == 10){
-                       if (boardMain.vec_players_selected[i]->getJailStatusNum() != 0){
-                           f << " " << 1 << " " << boardMain.vec_players_selected[i]->getJailTurns();
-                       } else {
-                           f << " " << 0;
-                       }
-                       f << endl;
-                   }
-               }
-               for (int i = 0; i < boardMain.vec_buildings.size(); ++i){
-                   if (i != 0 || i != 2 || i != 4 || i != 7 || i != 10 || i != 17 || i != 20 || i != 22 || i != 30 || i != 33 || i != 36 || i != 38){
-                       f << boardMain.vec_buildings[i]->getBName() << " " << boardMain.getOwner(boardMain.vec_buildings[i].get())->getName() << " " << static_cast<Academic*>(boardMain.vec_buildings[i].get())->getLevel() << endl;
-                   }
-               }
-               f.close();
-           }else if (command == "next"){ // next
-               cout << "prev: " << boardMain.getCurrPlayer() << endl;
-               int numPlayers = boardMain.getNumPlayers();
-               boardMain.setCurrPlayer(boardMain.getCurrPlayer() + 1); // !!! CHECK EDGE CASE WITH ONLY 1 PLAYER IN VEC
-               if (boardMain.getCurrPlayer() > (numPlayers - 1)){ //gives turn back to the first player after the last player calls "next"
-                   boardMain.setCurrPlayer(0);
-               }
-               cout << "new: " << boardMain.getCurrPlayer()<< endl;
-               if (boardMain.vec_players_selected.size() == 1){ // indicates end of game
-                   cout << "Congratulations " << boardMain.vec_players_selected[0]->getName() << "!! You have won the game and dominatd Watopoly, thank you for playing:)" << endl;
-                   cout << "Game made by: Sasha Boruk, Shirley Xiao, and Jiayi Zhao. 2025" << endl;
-                   return 0;
-               } else {
-                   cout << "It is now " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName() << "'s turn!" << endl;
-               }
-           }else if (command == "trade"){ // trade <name> <give> <receive>
-               string name, give, receive;
-               cin >> name >> give >> receive;
-               boardMain.trade(name, give, receive, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
-           }else if (command == "improve"){ // improve <property> buy/sell
-               string propertyName,status;
-               cin >> propertyName >> status;
-               Building *b = boardMain.getBuilding(propertyName);
-               if (b) {
-                   boardMain.academicImprovements(b, status, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
-               }
-               boardMain.printBoard();
-           }else if (command == "mortgage"){ // mortgage <property>
-              
-
-
-               string propertyName;
-               cin >> propertyName;
-               Building *b = boardMain.getBuilding(propertyName);
-               if (b) {
-                   boardMain.mortgage(b, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
-               }
-           } else if (command == "bankrupt"){
-               cout << "You currently do not need to pay more money than you have, this is not a valid command please enter again: " << endl;
-               // bankrupt // CAN WE EVEN HAVE THIS HERE??
-               // does this mean they are just bankrupt in general, so technically to bank? or do we allow them to just drop out of game
-               // possible solution:
-               // remove from here
-               //boardMain.bankrupt();
-           } else if (command == "unmortgage"){ // unmortgage <property>
-               string propertyName;
-               cin >> propertyName;
-               Building *b = boardMain.getBuilding(propertyName);
-               if (b) {
-                   boardMain.unmortgage(b, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
-               }
-           } else if (command == "assets"){ // assets
-               boardMain.vec_players_selected[boardMain.getCurrPlayer()]->printAssests();
-           } else if (command == "all"){ // all
-               int cttt = 0;
-               boardMain.vec_players_selected[boardMain.getCurrPlayer()]->printAssests(); // extra feature: prints the player who called assets before everyone else
-               while (cttt < boardMain.vec_players_selected.size()){
-                   if (cttt != boardMain.getCurrPlayer()){
-                       boardMain.vec_players_selected[cttt]->printAssests();
-                   }
-                   ++cttt;
-               }
-           } else if (command == "print"){
-               boardMain.stateOfBoardChange();
-               boardMain.printBoard();          
-           } else {
-               cout << "Not a valid command, please try again: " << endl;
-           }
-           //} // switch
-       } // while
-   } // else
+    }// else for the player selection
+    cout << "number of players is: " << boardMain.getNumPlayers() << endl;
+    cout << "the players chosen are: " << endl;
+    for (int i = 0; i < boardMain.getNumPlayers(); ++i){
+        cout << boardMain.vec_players_selected[i]->getName() << " " << boardMain.vec_players_selected[i]->getAcronym() << endl;
+    }
+    cout << "It is now " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName() << "'s turn!" << endl;
+    string command;
+    while (cin >> command){
+        // !! DO WE ADD END OF GAME CHECK HERE???
+        if (boardMain.vec_players_selected.size() == 1){ // indicates end of game
+            cout << "after while:" << endl;
+            cout << "Congratulations " << boardMain.vec_players_selected[0]->getName() << "!! YOu have won the game and dominatd Watopoly, thank you for playing:)" << endl;
+            cout << "Game made by: Sasha Boruk, Shirley Xiao, and Jiayi Zhao. 2025" << endl;
+            return 0;
+        }
+        //
+        cout << " you entered: " << command << endl;
+        if (command == "roll"){ // roll OR roll <int> <int> if -testing in args
+            int sum_of_roll = 0;
+            vector<int> v;
+            if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getJailStatusNum() == 0) {
+                if (fair_dice){
+                    DiceRoll(&v);
+                    sum_of_roll = v[0] + v[1];
+                } else { // are we allowed a unfair dice when in jail?
+                    int x;
+                    int y;
+                    cin >> x;
+                    cin >> y;
+                    while (x < 0) {
+                        cout << "Oops, the first number is negative: please enter a postive number: " << endl;
+                        cin >> x;
+                    }
+                    while (x < 0) {
+                        cout << "Oops, the second number is negative: please enter a postive number: " << endl;
+                        cin >> y;
+                    }
+                    sum_of_roll = x + y;
+                }
+            } else {
+                //in jail
+                static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(*boardMain.vec_players_selected[boardMain.getCurrPlayer()]);
+            }
+            //for testing:
+            cout << "your dice sum is: " << sum_of_roll << endl;
+            boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setPos(sum_of_roll); //updates the player position
+            cout << "new position: " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() << endl;
+            if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() > 40){ //checks if went around the circle  // WHEN LANDING ON OSAP WILL NOT GAIN 200 THROUGH THIS (so when pos == 0)
+                boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setPos(-40);
+                //means passed Go (or landed on Go)
+                boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney(200);
+            } //maybe change this whole block to be move(sum_of_roll, true). so player*->move(...);
+            
+            boardMain.stateOfBoardChange(); //JUDY
+            boardMain.printBoard(); //JUDY
+            // // need to check if players pos is on owneable or unowneable space
+            int pos = boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos();
+            //Player *currentPlayerPtr = boardMain.vec_players_selected[boardMain.getCurrPlayer()];
+            cout << "You landed on: " << boardMain.vec_buildings[pos]->getBName() << endl;
+            if (boardMain.vec_buildings[pos]->getOwnableStatus()){ //means is an owneable building
+                //check owenrship
+                if (boardMain.getOwner(boardMain.vec_buildings[pos].get())){ //has an owner
+                    if(boardMain.getOwner(boardMain.vec_buildings[pos].get())->getName() == boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName()){ //owner by this player
+                        cout << "You own this property, nice!" << endl;
+                    } else { //owned by other player
+                        int owed = boardMain.moneyOwed(boardMain.vec_buildings[pos].get(), sum_of_roll);
+                        cout << "This buliding is owned, please pay $" << owed << endl;
+                        if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() >= owed){ //moneyOwed is the owneable building's rent/tuiton (with monopoly and/or improvements IF ITS ACADEMIC etc) (moneyOwed will check if it is a RES or GYM - maybe consider adding a bool in buildings)
+                            boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney((owed * -1)); // removes the money owed from the player who landed on the space
+                            //boardMain.vec_buildings[pos]->owner->setMoney(owed); //pays thea owner the money owed
+                            boardMain.getOwner(boardMain.vec_buildings[pos].get())->setMoney(owed); //pays thea owner the money owed
+                            cout << "You have enough money, the rent has been paid. Your current balance is: $" << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() << endl;
+                        } else {
+                            cout << "You do not have enough money, please do any of the following - trade <name> <give> <receive>, improve <property> sell, mortgage <property>, or bankrupt : " << endl;
+                            boardMain.pay(boardMain.vec_players_selected[boardMain.getCurrPlayer()].get(), owed, boardMain.getOwner(boardMain.vec_buildings[pos].get()));
+                        }
+                    } 
+                } else {
+                    //unowned (owner is nullptr) !!!
+                    cout << "This property costs $" << static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->getCost() << " would you like to buy this property?: [YES or NO] " << endl;
+                    string ans;
+                    cin >> ans;
+                    bool temp = true;
+                    while(temp){
+                        if (ans == "YES"){
+                            if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getMoney() < static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->getCost()){
+                                cout << "You do not have enough money to get this building. Continue your turn: " << endl;
+                            } else {
+                                boardMain.vec_players_selected[boardMain.getCurrPlayer()]->setMoney((static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->getCost() * -1)); //removes the money from the player who bought it
+                                boardMain.setOwner(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get(), boardMain.vec_players_selected[boardMain.getCurrPlayer()].get()); //sets the player to be the owner of the building
+                                //boardMain.vec_players_selected[boardMain.getCurrPlayer()]->addOwnable(static_cast<Ownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())); //adds the building to the players vector of buildings bought
+                                cout << "You bought this property, nice! You can continue your turn: " << endl;
+                            }
+                            temp = false;
+                        } else if (ans == "NO") {
+                            cout << "Okay, please continue your turn." << endl;
+                            temp = false;
+                        } else {
+                            cout << "Invalid choice, please enter again: " << endl;
+                            cin >> ans;
+                        }
+                    }
+                }                    
+            } else { //unowneable properties
+                //cout << "unownable" << endl;
+                bool slc = false;
+                if (boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 2 || boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 17 || boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos() == 33){ //means landed on SLC
+                    slc = true;
+                }
+                static_cast<Unownable*>(boardMain.vec_buildings[boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getPos()].get())->triggerEvent(*boardMain.vec_players_selected[boardMain.getCurrPlayer()]);
+                if (slc){
+                    boardMain.stateOfBoardChange(); //JUDY
+                    boardMain.printBoard(); //JUDY
+                }
+            }
+            // boardMain.stateOfBoardChange(); //notifies there is change in display
+            // boardMain.notifyObservers(); //notifies there is change in display
+        }else if (command == "save"){ // save <filename>
+            boardMain.stateOfBoardChange(); //JUDY
+            string filename;
+            cin >> filename;
+            while (filename == "") {
+                cout << "Not a valid filename, please input the filename again: " << endl;
+                cin >> filename;
+            } 
+            ofstream f{filename};
+            f << boardMain.vec_players_selected.size() << endl; // start giving game info
+            for (int i = 0; i < boardMain.vec_players_selected.size(); ++i){
+                f << boardMain.vec_players_selected[i]->getName() << " " << boardMain.vec_players_selected[i]->getAcronym() << " " << boardMain.vec_players_selected[i]->getRimCups() << " " << boardMain.vec_players_selected[i]->getMoney() << " " << boardMain.vec_players_selected[i]->getPos();
+                if (boardMain.vec_players_selected[i]->getPos() == 10){
+                    if (boardMain.vec_players_selected[i]->getJailStatusNum() != 0){
+                        f << " " << 1 << " " << boardMain.vec_players_selected[i]->getJailTurns();
+                    } else {
+                        f << " " << 0;
+                    }
+                }
+                f << endl;
+            }
+            for (int i = 0; i < boardMain.vec_buildings.size(); ++i){
+                if (i != 0 && i != 2 && i != 4 && i != 7 && i != 10 && i != 17 && i != 20 && i != 22 && i != 30 && i != 33 && i != 36 && i != 38){
+                    f << boardMain.vec_buildings[i]->getBName() << " ";
+                    if (boardMain.getOwner(boardMain.vec_buildings[i].get())){
+                        f << boardMain.getOwner(boardMain.vec_buildings[i].get())->getName();
+                    } else{
+                        f << "BANK";
+                    }
+                    if (static_cast<Ownable*>(boardMain.vec_buildings[i].get())->getBType() == 'A'){
+                        if (static_cast<Ownable*>(boardMain.vec_buildings[i].get())->getMortgageState() == true){
+                            f << " " << -1;
+                        } else {
+                            f << " " << static_cast<Academic*>(boardMain.vec_buildings[i].get())->getLevel();
+                        }
+                    } else {
+                        if (static_cast<Ownable*>(boardMain.vec_buildings[i].get())->getMortgageState() == true){
+                            f << " " << -1;
+                        } else {
+                            f << " " << 0;
+                        }
+                    }
+                    if (i != boardMain.vec_buildings.size() - 1){
+                        f << endl;
+                    }
+                }
+            }
+            f.close();
+        } else if (command == "next"){ // next
+            cout << "prev: " << boardMain.getCurrPlayer() << endl;
+            int numPlayers = boardMain.getNumPlayers();
+            boardMain.setCurrPlayer(boardMain.getCurrPlayer() + 1); // !!! CHECK EDGE CASE WITH ONLY 1 PLAYER IN VEC
+            if (boardMain.getCurrPlayer() > (numPlayers - 1)){ //gives turn back to the first player after the last player calls "next"
+                boardMain.setCurrPlayer(0);
+            }
+            cout << "new: " << boardMain.getCurrPlayer()<< endl;
+            if (boardMain.vec_players_selected.size() == 1){ // indicates end of game
+                cout << "Congratulations " << boardMain.vec_players_selected[0]->getName() << "!! You have won the game and dominatd Watopoly, thank you for playing:)" << endl;
+                cout << "Game made by: Sasha Boruk, Shirley Xiao, and Jiayi Zhao. 2025" << endl;
+                return 0;
+            } else {
+                cout << "It is now " << boardMain.vec_players_selected[boardMain.getCurrPlayer()]->getName() << "'s turn!" << endl;
+            }
+        }else if (command == "trade"){ // trade <name> <give> <receive>
+            string name, give, receive;
+            cin >> name >> give >> receive;
+            boardMain.trade(name, give, receive, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
+        }else if (command == "improve"){ // improve <property> buy/sell
+            string propertyName,status;
+            cin >> propertyName >> status;
+            Building *b = boardMain.getBuilding(propertyName);
+            if (b) {
+                boardMain.academicImprovements(b, status, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
+            }
+            boardMain.printBoard();
+        }else if (command == "mortgage"){ // mortgage <property>
+            string propertyName;
+            cin >> propertyName;
+            Building *b = boardMain.getBuilding(propertyName);
+            if (b) {
+                boardMain.mortgage(b, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
+            }
+        } else if (command == "bankrupt"){
+            cout << "You currently do not need to pay more money than you have, this is not a valid command please enter again: " << endl;
+            // bankrupt // CAN WE EVEN HAVE THIS HERE??
+            // does this mean they are just bankrupt in general, so technically to bank? or do we allow them to just drop out of game
+            // possible solution:
+            // remove from here
+            //boardMain.bankrupt();
+        } else if (command == "unmortgage"){ // unmortgage <property>
+            string propertyName;
+            cin >> propertyName;
+            Building *b = boardMain.getBuilding(propertyName);
+            if (b) {
+                boardMain.unmortgage(b, boardMain.vec_players_selected[boardMain.getCurrPlayer()].get());
+            }
+        } else if (command == "assets"){ // assets
+            boardMain.vec_players_selected[boardMain.getCurrPlayer()]->printAssests();
+        } else if (command == "all"){ // all
+            int cttt = 0;
+            boardMain.vec_players_selected[boardMain.getCurrPlayer()]->printAssests(); // extra feature: prints the player who called assets before everyone else
+            while (cttt < boardMain.vec_players_selected.size()){
+                if (cttt != boardMain.getCurrPlayer()){
+                    boardMain.vec_players_selected[cttt]->printAssests();
+                }
+                ++cttt;
+            }
+        } else if (command == "print"){
+            boardMain.stateOfBoardChange();
+            boardMain.printBoard();          
+        } else {
+            cout << "Not a valid command, please try again: " << endl;
+        }
+        //} // switch
+    } // while
+//} // else
 }
 
